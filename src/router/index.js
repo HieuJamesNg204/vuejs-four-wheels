@@ -5,7 +5,7 @@ import Register from "@/pages/Register.vue";
 const routes = [
     { path: '/fourwheels/login', component: Login },
     { path: '/fourwheels/register', component: Register },
-    { path: '/', redirect: '/fourwheels/login' }
+    { path: '/fourwheels', redirect: '/fourwheels/login' }
 ];
 
 const router = createRouter({
