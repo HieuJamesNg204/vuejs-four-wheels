@@ -1,6 +1,9 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const username = ref('');
 const password = ref('');
@@ -14,7 +17,8 @@ const register = async () => {
             role: role.value,
         });
         console.log(`Registration successful: ${response.data}`);
-        alert('Registration successful!')
+        alert('Registration successful!');
+        router.push('/fourwheels/login');
     } catch (error) {
         alert(`Error: ${error}`);
     }

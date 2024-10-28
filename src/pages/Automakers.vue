@@ -20,9 +20,9 @@ onMounted(async () => {
                 'x-auth-token': `${token}`,
             },
         });
+
         console.log('Automakers response:', res.data);
         automakers.value = res.data;
-        console.log(res);
     } catch (error) {
         localStorage.setItem('username', '');
         alert('Session Expired! Please log in again to proceed!');
@@ -31,19 +31,37 @@ onMounted(async () => {
 });
 
 const createAutomaker = () => {
-    router.push("/fourwheels/automakers/create");
+    router.push('/fourwheels/automakers/create');
 };
 
 const editAutomaker = (id) => {
-    alert(`You'll soon be able to edit automaker with id ${id}`);
+    router.push(`/fourwheels/automakers/edit/${id}`);
 };
 
-const deleteAutomaker = (id) => {
-    alert(`You'll soon be able to delete automaker with id ${id}`);
+const deleteAutomaker = async (id) => {
+    const isConfirmed = confirm('Are you sure to delete the automaker?');
+    if (isConfirmed) {
+        try {
+            const res = await axios.delete(`http://localhost:3000/fourwheels/automakers/${id}`, {
+                headers: {
+                    'x-auth-token': `${localStorage.getItem('token')}`
+                }
+            });
+
+            if (res.status === 204) {
+                alert('Automaker deleted');
+                automakers.value = automakers.value.filter(
+                    (automaker) => automaker._id !== id
+                );
+            }
+        } catch (error) {
+            alert('Failed to delete the automaker!');
+        }
+    } else {}
 };
 
 const viewAutomakerInfo = (id) => {
-    alert(`You'll soon be able to view automaker with id ${id}`);
+    router.push(`/fourwheels/automakers/${id}`);
 };
 </script>
 
