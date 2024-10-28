@@ -1,20 +1,26 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
+const router = useRouter();
 
 const handleLogin = async () => {
-    try {
-        const data = {
-            username: username.value,
-            password: password.value
-        };
+    const data = {
+        username: username.value,
+        password: password.value
+    };
     
+    try {
         const res = await axios.post('http://localhost:3000/fourwheels/auth/login', data);
-        alert('Login successful');
-        console.log('Login successful:', res.data);
+        alert('Login successful')
+        console.log('Login successful:', res.data.token);
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('username', username.value);
+
+        router.push('/fourwheels/automakers');
     } catch (error) {
         alert(`Error: ${error}`);
     }
