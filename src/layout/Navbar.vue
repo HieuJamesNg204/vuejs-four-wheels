@@ -16,7 +16,7 @@ name.value = localName;
         <div class="container mx-auto flex justify-between items-center">
             <div class="text-white font-bold text-xl">Four Wheels</div>
             <div class="text-white">
-                <p v-if="name !=='' ">Welcome  {{ name }}</p>
+                <p v-if="name !== '' ">Welcome  {{ name }}</p>
             </div>
             <div>
                 <router-link to="/fourwheels" class="text-white mr-4">Home</router-link>

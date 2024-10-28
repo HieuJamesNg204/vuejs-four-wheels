@@ -17,21 +17,27 @@ onMounted(() => {
 });
 
 const handleCreate = async () => {
-    const res = await axios.post(
-        'http://localhost:3000/fourwheels/automakers', 
-        {
-            name: text.value
-        },
-        {
-            headers: {
-                'x-auth-token': `${token}`
+    try {
+        const res = await axios.post(
+            'http://localhost:3000/fourwheels/automakers', 
+            {
+                name: text.value
+            },
+            {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
             }
-        }
-    );
-
-    console.log(res.data);
-    alert('Automaker created');
-    router.push('/fourwheels/automakers');
+        );
+    
+        console.log(res.data);
+        alert('Automaker created');
+        router.push('/fourwheels/automakers');
+    } catch (error) {
+        localStorage.setItem('username', '');
+        alert('Session Expired! Please log in again to proceed!');
+        router.push('/fourwheels/login');
+    }
 };
 </script>
 

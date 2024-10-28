@@ -15,19 +15,18 @@ onMounted(async () => {
     }
 
     try {
-        const res = await axios.get("http://localhost:3000/fourwheels/automakers", {
-        headers: {
-            "x-auth-token": `${token}`,
-        },
+        const res = await axios.get('http://localhost:3000/fourwheels/automakers', {
+            headers: {
+                'x-auth-token': `${token}`,
+            },
         });
-        console.log("Automakers response:", res.data);
+        console.log('Automakers response:', res.data);
         automakers.value = res.data;
         console.log(res);
     } catch (error) {
-        console.log("ERROR");
-        localStorage.setItem("username", "");
-        alert("Session Expiered! Please log in again to proceed!");
-        router.push("/fourwheels/login");
+        localStorage.setItem('username', '');
+        alert('Session Expired! Please log in again to proceed!');
+        router.push('/fourwheels/login');
     }
 });
 
