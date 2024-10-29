@@ -19,7 +19,7 @@ const routes = [
     { path: '/fourwheels/automakers/:id', component: AutomakerDetail },
 
     { path: '/fourwheels/about', component: About },
-    { path: '/fourwheels', redirect: '/fourwheels/login' },
+    { path: '/fourwheels', redirect: '/fourwheels/automakers' },
     { path: '/fourwheels/:pathMatch(.*)*', component: NotFound }
 ];
 

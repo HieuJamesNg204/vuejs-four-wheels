@@ -9,10 +9,27 @@ const text = ref('');
 
 const token = localStorage.getItem('token');
 
-onMounted(() => {
+onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
+    }
+
+    try {
+        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+            headers: {
+                'x-auth-token': `${token}`
+            }
+        });
+
+        const userRole = userRes.data.role;
+
+        if (userRole === 'customer') {
+            alert('Sorry. you don\'t have permission to access this page :(');
+            router.back();
+        }
+    } catch (error) {
+        //
     }
 });
 
@@ -34,9 +51,24 @@ const handleCreate = async () => {
         alert('Automaker created');
         router.push('/fourwheels/automakers');
     } catch (error) {
-        localStorage.setItem('username', '');
-        alert('Session Expired! Please log in again to proceed!');
-        router.push('/fourwheels/login');
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('username', '');
+                localStorage.setItem('token', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else if (statusCode === 400) {
+                alert('Bad request. Please check your input.');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 };
 </script>

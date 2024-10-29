@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const text = ref('');
+
 const route = useRoute();
 const router = useRouter();
 
@@ -16,19 +17,49 @@ onMounted(async () => {
     }
 
     try {
-        const carById = await axios.get(
+        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+            headers: {
+                'x-auth-token': `${token}`
+            }
+        });
+
+        const userRole = userRes.data.role;
+
+        if (userRole === 'customer') {
+            alert('Sorry. you don\'t have permission to access this page :(');
+            router.back();
+        }
+
+        const automakerRes = await axios.get(
             `http://localhost:3000/fourwheels/automakers/${route.params.id}`,
             {
                 headers: {
-                    'x-auth-token': token
+                    'x-auth-token': `${token}`
                 }
             }
         );
 
-        text.value = carById.data.name;
+        text.value = automakerRes.data.name;
     } catch (error) {
-        alert('Automaker not found :(');
-        router.push('/fourwheels/automakers');
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('username', '');
+                localStorage.setItem('token', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else if (statusCode === 404) {
+                alert('Automaker not found :(');
+                router.back();
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 })
 
@@ -50,9 +81,22 @@ const handleEdit = async () => {
         alert('Automaker updated');
         router.push('/fourwheels/automakers');
     } catch (error) {
-        localStorage.setItem('username', '');
-        alert('Session Expired! Please log in again to proceed!');
-        router.push('/fourwheels/login');
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('username', '');
+                localStorage.setItem('token', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 };
 </script>

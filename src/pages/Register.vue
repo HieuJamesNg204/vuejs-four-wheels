@@ -7,9 +7,15 @@ const router = useRouter();
 
 const username = ref('');
 const password = ref('');
+const passwordConfirmation = ref('');
 const role = ref('admin');
 
 const register = async () => {
+    if (password.value !== passwordConfirmation.value) {
+        alert('Passwords do not match!');
+        return;
+    }
+
     try {
         const response = await axios.post('http://localhost:3000/fourwheels/auth/register', {
             username: username.value,
@@ -30,14 +36,14 @@ const register = async () => {
         <h1 class="text-2xl font-bold mb-4">Register</h1>
         <form>
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-                    Email
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                    Username
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="email"
-                    type="email"
-                    placeholder="Email"
+                    id="username"
+                    type="text"
+                    placeholder="Username"
                     v-model="username"
                 />
             </div>
@@ -54,6 +60,21 @@ const register = async () => {
                     type="password"
                     placeholder="Password"
                     v-model="password"
+                />
+            </div>
+            <div class="mb-6">
+                <label
+                    class="block text-gray-700 text-sm font-bold mb-2"
+                    for="password"
+                >
+                    Confirm Password
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="password"
+                    type="password"
+                    placeholder="Confirm password"
+                    v-model="passwordConfirmation"
                 />
             </div>
             <div class="mb-6">

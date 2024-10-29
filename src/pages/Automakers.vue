@@ -6,15 +6,24 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const automakers = ref([]);
+const userRole = ref('');
 
 onMounted(async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-        alert("You need to log in to proceed!");
-        router.push("/fourwheels/login");
+        alert('You need to log in to proceed!');
+        router.push('/fourwheels/login');
     }
 
     try {
+        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+            headers: {
+                'x-auth-token': `${token}`,
+            },
+        });
+
+        userRole.value = userRes.data.role;
+
         const res = await axios.get('http://localhost:3000/fourwheels/automakers', {
             headers: {
                 'x-auth-token': `${token}`,
@@ -24,9 +33,22 @@ onMounted(async () => {
         console.log('Automakers response:', res.data);
         automakers.value = res.data;
     } catch (error) {
-        localStorage.setItem('username', '');
-        alert('Session Expired! Please log in again to proceed!');
-        router.push('/fourwheels/login');
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('token', '');
+                localStorage.setItem('username', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 });
 
@@ -67,10 +89,10 @@ const viewAutomakerInfo = (id) => {
 
 <template>
     <div class="container mx-auto p-4">
-        <div class="flex mb-4">
-        <button class="btn-primary" @click="createAutomaker">
-            Create Automaker
-        </button>
+        <div v-if="userRole === 'admin'" class="flex mb-4">
+            <button class="btn-primary" @click="createAutomaker">
+                Create Automaker
+            </button>
         </div>
 
         <div class="overflow-x-auto">
@@ -87,10 +109,11 @@ const viewAutomakerInfo = (id) => {
                 <td class="py-2 px-4 border-b">{{ automaker._id }}</td>
                 <td class="py-2 px-4 border-b">{{ automaker.name }}</td>
                 <td class="py-2 px-4 border-b">
-                <button class="btn-edit" @click="editAutomaker(automaker._id)">
+                <button v-if="userRole === 'admin'" class="btn-edit" @click="editAutomaker(automaker._id)">
                     Edit
                 </button>
                 <button
+                    v-if="userRole === 'admin'"
                     class="btn-delete"
                     @click="deleteAutomaker(automaker._id)"
                 >

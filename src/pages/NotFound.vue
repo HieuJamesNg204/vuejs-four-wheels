@@ -1,8 +1,13 @@
+<script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
+</script>
+
 <template>
     <div class="not-found">
         <h1>404 :(</h1>
         <p>Oops! The page you are looking for doesn't exist</p>
-        <router-link to="/fourwheels" class="home-link">Go back to Homepage</router-link>
+        <button @click="router.back()" class="back-link">Go back</button>
     </div>
 </template>
 
@@ -28,7 +33,7 @@ p {
     margin: 1rem 0;
 }
 
-.home-link {
+.back-link {
     margin-top: 1rem;
     padding: 0.5rem 1.5rem;
     font-size: 1rem;
