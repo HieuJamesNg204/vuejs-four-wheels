@@ -1,20 +1,21 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const name = ref('')
+const name = ref('');
 
-const localName = localStorage.getItem('username');
-
-name.value = localName;
+onMounted(() => {
+    name.value = localStorage.getItem('username');
+})
 
 const handleLogout = () => {
     localStorage.setItem('token', '');
     localStorage.setItem('username', '');
+    name.value = '';
     router.push('/fourwheels/login');
-}
+};
 </script>
 
 
@@ -25,10 +26,10 @@ const handleLogout = () => {
                 <router-link to="/fourwheels">Four Wheels</router-link>
             </div>
             <div class="text-white">
-                <p v-if="name !== '' ">Welcome  {{ name }}</p>
+                <p v-if="name !== ''">Welcome  {{ name }}</p>
             </div>
             <div>
-                <button v-if="name !== '' " class="text-white mr-4" @click="handleLogout">Log out</button>
+                <button v-if="name !== ''" class="text-white mr-4" @click="handleLogout">Log out</button>
                 <router-link to="/fourwheels/about" class="text-white">About</router-link>
             </div>
         </div>

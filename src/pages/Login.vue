@@ -15,7 +15,7 @@ const handleLogin = async () => {
     
     try {
         const res = await axios.post('http://localhost:3000/fourwheels/auth/login', data);
-        alert('Login successful')
+        alert('Login successful');
         console.log('Login successful:', res.data.token);
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('username', username.value);
