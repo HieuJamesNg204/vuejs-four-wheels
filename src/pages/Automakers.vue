@@ -61,7 +61,7 @@ const editAutomaker = (id) => {
 };
 
 const deleteAutomaker = async (id) => {
-    const isConfirmed = confirm('Are you sure to delete the automaker?');
+    const isConfirmed = confirm('Deleting this automaker may also delete its associated cars. Are you sure to proceed?');
     if (isConfirmed) {
         try {
             const res = await axios.delete(`http://localhost:3000/fourwheels/automakers/${id}`, {

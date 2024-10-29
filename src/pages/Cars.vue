@@ -45,7 +45,22 @@ onMounted(async () => {
         console.log('Cars:', carRes.data);
         cars.value = carRes.data;
     } catch (error) {
-        console.log('Error');
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('token', '');
+                localStorage.setItem('username', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 });
 
@@ -67,77 +82,18 @@ const viewCarInfo = (id) => {
 </script>
 
 <template>
-    <div class="car-list">
-        <h1>Used Car Collection</h1>
-
-        <label for="automaker-select">Select Automaker</label>
-        <select name="automaker-select" id="automaker-select" v-model="selectedAutomaker">
-            <option value="">All</option>
-            <option v-for="automaker in automakers" :key="automaker._id" :value="automaker._id">
-                {{ automaker.name }}
-            </option>
-        </select>
-
-        <div class="car-grid">
-            <div v-for="car in cars" :key="car._id" class="car-card">
-                <img src="https://cdn0.iconfinder.com/data/icons/cars-c/512/Car1-1024.png" alt="Car image" class="car-image" />
-                <div class="car-details">
-                    <h3>{{ car.automaker.name }} {{ car.model }}</h3>
-                    <p>Year: {{ car.year }}</p>
-                    <p><strong>Price</strong>: ${{ car.price }}</p>
-                </div>
+        <div class="container mx-auto py-10">
+            <h1 class="text-3xl font-bold mb-6 text-center">Car Collection</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <CarCard v-for="car in cars" :key="car.id" :car="car" />
             </div>
         </div>
-    </div>
 </template>
 
+<script>
+import CarCard from './CarCard.vue';
+</script>
+
 <style scoped>
-.car-list {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.car-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.car-list {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* .car-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-} */
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-select {
-  padding: 8px;
-  font-size: 1em;
-  margin-bottom: 20px;
-  display: block;
-  width: 100%;
-  max-width: 200px;
-}
+/* Optional styling for page layout */
 </style>
