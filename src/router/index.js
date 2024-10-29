@@ -6,6 +6,7 @@ import Automakers from "@/pages/Automakers.vue";
 import CreateAutomaker from "@/pages/CreateAutomaker.vue";
 import EditAutomaker from "@/pages/EditAutomaker.vue";
 import AutomakerDetail from "@/pages/AutomakerDetail.vue";
+import Cars from "@/pages/Cars.vue";
 import NotFound from "@/pages/NotFound.vue";
 
 const routes = [
@@ -19,7 +20,7 @@ const routes = [
     { path: '/fourwheels/automakers/:id', component: AutomakerDetail },
 
     { path: '/fourwheels/about', component: About },
-    { path: '/fourwheels', redirect: '/fourwheels/automakers' },
+    { path: '/fourwheels', component: Cars },
     { path: '/fourwheels/:pathMatch(.*)*', component: NotFound }
 ];
 
