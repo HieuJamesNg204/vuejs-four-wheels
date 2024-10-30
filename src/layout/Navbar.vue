@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const name = ref('');
+const token = localStorage.getItem('token');
 
 onMounted(() => {
     name.value = localStorage.getItem('username');
@@ -23,7 +24,7 @@ const handleLogout = () => {
     <nav class="bg-blue-500 p-4">
         <div class="container mx-auto flex justify-between items-center">
             <div class="text-white font-bold text-xl">
-                <router-link to="/fourwheels">Four Wheels</router-link>
+                <router-link :to="token? '/fourwheels' : '/fourwheels/login'">Four Wheels</router-link>
             </div>
             <div class="text-white">
                 <p v-if="name !== ''">Welcome  {{ name }}</p>

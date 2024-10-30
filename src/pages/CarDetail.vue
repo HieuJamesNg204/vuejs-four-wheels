@@ -62,7 +62,7 @@ const deleteCar = async (id) => {
 <template>
     <div class="flex items-center justify-center min-h-screen bg-white p-4">
         <img 
-            class="mr-4 w-full h-full object-cover" 
+            class="mr-4 w-full h-full rounded-lg object-cover" 
             src="https://www.toyota.com.vn//Resources/Images/011DEA3A01BBE6EFEEB74DCB69E50997.png" 
             alt="Car image" 
         />

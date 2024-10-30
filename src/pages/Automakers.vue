@@ -96,39 +96,39 @@ const viewAutomakerInfo = (id) => {
         </div>
 
         <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-300">
-            <thead>
-            <tr>
-                <th class="py-2 px-4 border-b">ID</th>
-                <th class="py-2 px-4 border-b">Name</th>
-                <th class="py-2 px-4 border-b">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="automaker in automakers" :key="automaker._id">
-                <td class="py-2 px-4 border-b">{{ automaker._id }}</td>
-                <td class="py-2 px-4 border-b">{{ automaker.name }}</td>
-                <td class="py-2 px-4 border-b">
-                    <button v-if="userRole === 'admin'" class="btn-edit" @click="editAutomaker(automaker._id)">
-                        Edit
-                    </button>
-                    <button
-                        v-if="userRole === 'admin'"
-                        class="btn-delete"
-                        @click="deleteAutomaker(automaker._id)"
-                    >
-                        Delete
-                    </button>
-                    <button
-                        class="btn-details"
-                        @click="viewAutomakerInfo(automaker._id)"
-                    >
-                        Details
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 text-left border-b">ID</th>
+                        <th class="py-2 px-4 text-left border-b">Name</th>
+                        <th class="py-2 px-4 text-left border-b">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="automaker in automakers" :key="automaker._id">
+                        <td class="py-2 px-4 border-b">{{ automaker._id }}</td>
+                        <td class="py-2 px-4 border-b">{{ automaker.name }}</td>
+                        <td class="py-2 px-4 border-b">
+                            <button v-if="userRole === 'admin'" class="btn-edit" @click="editAutomaker(automaker._id)">
+                                Edit
+                            </button>
+                            <button
+                                v-if="userRole === 'admin'"
+                                class="btn-delete"
+                                @click="deleteAutomaker(automaker._id)"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                class="btn-details"
+                                @click="viewAutomakerInfo(automaker._id)"
+                            >
+                                Details
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
