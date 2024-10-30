@@ -157,13 +157,13 @@ const handleCreate = async () => {
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb 2" for="bodyStyle">
-                    Body style (Sedan, Hatchback, etc)
+                    Body Style (Sedan, Hatchback, etc)
                 </label>
                 <input 
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                     id = "bodyStyle"
                     type="text"
-                    placeholder="Body style (Sedan, Hatchback, etc)"
+                    placeholder="Body Style (Sedan, Hatchback, etc)"
                     v-model="bodyStyle"
                 >
             </div>
@@ -193,13 +193,13 @@ const handleCreate = async () => {
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb 2" for="engineType">
-                    Engine type
+                    Engine Type (Petrol, Diesel, etc)
                 </label>
                 <input 
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                     id = "engineType"
                     type="text"
-                    placeholder="Engine type"
+                    placeholder="Engine Type (Petrol, Diesel, etc)"
                     v-model="engineType"
                 >
             </div>
@@ -214,25 +214,25 @@ const handleCreate = async () => {
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb 2" for="mileage">
-                    Mileage in km
+                    Mileage In Kilometres
                 </label>
                 <input 
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                     id = "mileage"
                     type="number"
-                    placeholder="Mileage in km"
+                    placeholder="Mileage In Kilometres"
                     v-model="mileage"
                 >
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb 2" for="seatingCapacity">
-                    Seating capacity
+                    Seating Capacity
                 </label>
                 <input 
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                     id = "seatingCapacity"
                     type="number"
-                    placeholder="Seating capacity"
+                    placeholder="Seating Capacity"
                     v-model="seatingCapacity"
                 >
             </div>
