@@ -116,7 +116,7 @@ const handleEdit = async () => {
 
         console.log(res.data);
         alert('Car updated');
-        router.push('/fourwheels/cars');
+        router.back();
     } catch (error) {
         if (error.response) {
             const statusCode = error.response.status;

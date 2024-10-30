@@ -4,16 +4,26 @@ import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const car = ref({});
+const userRole = ref('');
 
 const router = useRouter();
 const route = useRoute();
 
+const token = localStorage.getItem('token');
+
 onMounted(async () => {
-    const token = localStorage.getItem('token');
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     }
+
+    const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+        headers: {
+            'x-auth-token': `${token}`
+        }
+    });
+
+    userRole.value = userRes.data.role;
 
     const id = route.params.id;
 
@@ -25,13 +35,41 @@ onMounted(async () => {
 
     car.value = res.data;
 });
+
+const editCar = (id) => {
+    router.push(`/fourwheels/cars/edit/${id}`);
+};
+
+const deleteCar = async (id) => {
+    const isConfirmed = confirm('Are you sure to delete this car? This action can\'t be undone.');
+    if (isConfirmed) {
+        const res = await axios.delete(`http://localhost:3000/fourwheels/cars/${id}`, {
+            headers: {
+                'x-auth-token': `${token}`
+            }
+        });
+
+        if (res.status === 204) {
+            alert('Car deleted');
+            router.push('/fourwheels/cars');
+        }
+    } else {
+        //
+    }
+};
 </script>
 
 <template>
     <div class="flex items-center justify-center min-h-screen bg-white p-4">
-        <img class="w-full h-48 object-cover" src="https://th.bing.com/th/id/OIP.Xl_dFGb88jRMmM8aWYPxoQHaHa?rs=1&pid=ImgDetMain" alt="Car image" />
+        <img 
+            class="mr-4 w-full h-full object-cover" 
+            src="https://www.toyota.com.vn//Resources/Images/011DEA3A01BBE6EFEEB74DCB69E50997.png" 
+            alt="Car image" 
+        />
         <div class="w-full max-w-md bg-gray-200 rounded-lg shadow-lg p-6">
-            <h1 class="text-2xl font-bold text-black mb-4 text-center">{{ car.automaker.name }} {{ car.model }} {{ car.year }} - {{ car.price }} VND</h1>
+            <h1 v-if="car.automaker" class="text-2xl font-bold text-black mb-4 text-center">
+                {{ car.automaker.name }} {{ car.model }} {{ car.year }} - {{ car.price }} VND
+            </h1>
             <div class="space-y-4">
                 <div>
                     <label class="text-black font-semibold">Year of Manufacture:</label>
@@ -62,6 +100,34 @@ onMounted(async () => {
                     <p class="text-gray-800">{{ car.seatingCapacity }}</p>
                 </div>
             </div>
+            
+            <div class="ml-3 mb-3">
+                <button v-if="userRole === 'admin'" class="btn-edit" @click="editCar(car._id)">
+                    Edit
+                </button>
+                <button
+                    v-if="userRole === 'admin'"
+                    class="btn-delete"
+                    @click="deleteCar(car._id)"
+                >
+                    Delete
+                </button>
+                <button class="btn-goback" @click="router.back()">Go Back</button>
+            </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.btn-edit {
+    @apply bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mx-1;
+}
+
+.btn-delete {
+    @apply bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 mx-1;
+}
+
+.btn-goback {
+    @apply bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 mx-1;
+}
+</style>

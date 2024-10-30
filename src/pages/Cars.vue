@@ -77,14 +77,6 @@ const createCar = () => {
     router.push('/fourwheels/cars/create');
 };
 
-const editCar = (id) => {
-    router.push(`/fourwheels/cars/edit/${id}`);
-};
-
-const deleteCar = (id) => {
-    alert('This is a dummy action! You\'ve not been able to delete a car yet');
-};
-
 const viewCarInfo = (id) => {
     router.push(`/fourwheels/cars/${id}`);
 };
@@ -101,7 +93,7 @@ const viewCarInfo = (id) => {
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <!-- Cards -->
                 <div v-for="car in cars" :key="car._id" class="max-w-sm rounded overflow-hidden shadow-lg bg-gray-200">
-                    <img class="w-full h-48 object-cover" src="https://th.bing.com/th/id/OIP.Xl_dFGb88jRMmM8aWYPxoQHaHa?rs=1&pid=ImgDetMain" alt="Car image" />
+                    <img class="w-full h-48 object-cover" src="https://www.toyota.com.vn//Resources/Images/011DEA3A01BBE6EFEEB74DCB69E50997.png" alt="Car image" />
                     <div class="p-4">
                         <h2 class="font-bold text-xl mb-2">{{ car.automaker.name }} {{ car.model }}</h2>
                         <p class="text-gray-700 text-base">Year: {{ car.year }}</p>
@@ -109,16 +101,6 @@ const viewCarInfo = (id) => {
                     </div>
 
                     <div class="ml-3 mb-3">
-                        <button v-if="userRole === 'admin'" class="btn-edit" @click="editCar(car._id)">
-                            Edit
-                        </button>
-                        <button
-                            v-if="userRole === 'admin'"
-                            class="btn-delete"
-                            @click="deleteCar(car._id)"
-                        >
-                            Delete
-                        </button>
                         <button
                             class="btn-details"
                             @click="viewCarInfo(car._id)"
@@ -134,14 +116,6 @@ const viewCarInfo = (id) => {
 <style scoped>
 .btn-primary {
     @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600;
-}
-
-.btn-edit {
-    @apply bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mx-1;
-}
-
-.btn-delete {
-    @apply bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 mx-1;
 }
 
 .btn-details {
