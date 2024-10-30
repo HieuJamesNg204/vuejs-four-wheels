@@ -109,22 +109,22 @@ const viewAutomakerInfo = (id) => {
                 <td class="py-2 px-4 border-b">{{ automaker._id }}</td>
                 <td class="py-2 px-4 border-b">{{ automaker.name }}</td>
                 <td class="py-2 px-4 border-b">
-                <button v-if="userRole === 'admin'" class="btn-edit" @click="editAutomaker(automaker._id)">
-                    Edit
-                </button>
-                <button
-                    v-if="userRole === 'admin'"
-                    class="btn-delete"
-                    @click="deleteAutomaker(automaker._id)"
-                >
-                    Delete
-                </button>
-                <button
-                    class="btn-details"
-                    @click="viewAutomakerInfo(automaker._id)"
-                >
-                    Details
-                </button>
+                    <button v-if="userRole === 'admin'" class="btn-edit" @click="editAutomaker(automaker._id)">
+                        Edit
+                    </button>
+                    <button
+                        v-if="userRole === 'admin'"
+                        class="btn-delete"
+                        @click="deleteAutomaker(automaker._id)"
+                    >
+                        Delete
+                    </button>
+                    <button
+                        class="btn-details"
+                        @click="viewAutomakerInfo(automaker._id)"
+                    >
+                        Details
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -137,12 +137,15 @@ const viewAutomakerInfo = (id) => {
 .btn-primary {
     @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600;
 }
+
 .btn-edit {
     @apply bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mx-1;
 }
+
 .btn-delete {
     @apply bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 mx-1;
 }
+
 .btn-details {
     @apply bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 mx-1;
 }

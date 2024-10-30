@@ -61,7 +61,7 @@ onMounted(async () => {
             alert('An unexpected error occurred.');
         }
     }
-})
+});
 
 const handleEdit = async () => {
     try {
@@ -72,7 +72,7 @@ const handleEdit = async () => {
             },
             {
                 headers: {
-                    'x-auth-token': `${localStorage.getItem('token')}`
+                    'x-auth-token': `${token}`
                 }
             }
         );
@@ -117,9 +117,9 @@ const handleEdit = async () => {
                     v-model="text"
                 />
             </div>
-            <div class="flex items-center justify-between">
+            <div class="flex items-center">
                 <button 
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                     @click.prevent="handleEdit"   
                 >

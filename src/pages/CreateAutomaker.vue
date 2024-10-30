@@ -29,7 +29,22 @@ onMounted(async () => {
             router.back();
         }
     } catch (error) {
-        //
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('token', '');
+                localStorage.setItem('username', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 });
 
@@ -89,9 +104,9 @@ const handleCreate = async () => {
                     v-model="text"
                 />
             </div>
-            <div class="flex items-center justify-between">
+            <div class="flex items-center">
                 <button 
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                     @click.prevent="handleCreate"   
                 >

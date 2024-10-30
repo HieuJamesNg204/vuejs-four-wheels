@@ -28,16 +28,16 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
-            <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">Automaker Details</h1>
+    <div class="flex items-center justify-center min-h-screen bg-white p-4">
+        <div class="w-full max-w-md bg-gray-200 rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-black mb-4 text-center">Automaker Details</h1>
             <div class="space-y-4">
                 <div>
-                    <label class="text-gray-600 font-semibold">Automaker ID:</label>
+                    <label class="text-black font-semibold">Automaker ID:</label>
                     <p class="text-gray-800">{{ automaker._id }}</p>
                 </div>
                 <div>
-                    <label class="text-gray-600 font-semibold">Automaker Name:</label>
+                    <label class="text-black font-semibold">Automaker Name:</label>
                     <p class="text-gray-800">{{ automaker.name }}</p>
                 </div>
             </div>

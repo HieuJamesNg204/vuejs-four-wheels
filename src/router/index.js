@@ -7,7 +7,10 @@ import CreateAutomaker from "@/pages/CreateAutomaker.vue";
 import EditAutomaker from "@/pages/EditAutomaker.vue";
 import AutomakerDetail from "@/pages/AutomakerDetail.vue";
 import Cars from "@/pages/Cars.vue";
+import CreateCar from "@/pages/CreateCar.vue";
+import EditCar from "@/pages/EditCar.vue";
 import NotFound from "@/pages/NotFound.vue";
+import CarDetail from "@/pages/CarDetail.vue";
 
 const routes = [
     { path: '/fourwheels/login', component: Login },
@@ -19,8 +22,14 @@ const routes = [
     { path: '/fourwheels/automakers/edit/:id', component: EditAutomaker },
     { path: '/fourwheels/automakers/:id', component: AutomakerDetail },
 
+    // Cars routes
+    { path: '/fourwheels/cars', component: Cars },
+    { path: '/fourwheels/cars/create', component: CreateCar },
+    { path: '/fourwheels/cars/edit/:id', component: EditCar },
+    { path: '/fourwheels/cars/:id', component: CarDetail },
+
     { path: '/fourwheels/about', component: About },
-    { path: '/fourwheels', component: Cars },
+    { path: '/fourwheels', redirect: '/fourwheels/cars' },
     { path: '/fourwheels/:pathMatch(.*)*', component: NotFound }
 ];
 

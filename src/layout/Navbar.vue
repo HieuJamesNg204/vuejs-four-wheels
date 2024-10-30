@@ -29,8 +29,9 @@ const handleLogout = () => {
                 <p v-if="name !== ''">Welcome  {{ name }}</p>
             </div>
             <div>
+                <router-link to="/fourwheels/about" class="text-white mr-4">About</router-link>
+                <router-link to="/fourwheels/automakers" class="text-white mr-4">Automakers</router-link>
                 <button v-if="name !== ''" class="text-white mr-4" @click="handleLogout">Log out</button>
-                <router-link to="/fourwheels/about" class="text-white">About</router-link>
             </div>
         </div>
     </nav>

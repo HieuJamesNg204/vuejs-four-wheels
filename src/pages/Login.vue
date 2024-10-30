@@ -20,7 +20,7 @@ const handleLogin = async () => {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('username', username.value);
 
-        router.push('/fourwheels/automakers');
+        router.push('/fourwheels/cars');
     } catch (error) {
         alert(`Error: ${error}`);
     }
