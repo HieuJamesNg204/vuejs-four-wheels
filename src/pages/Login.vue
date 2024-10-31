@@ -52,12 +52,18 @@ const handleLogin = async () => {
                         Password
                     </label>
                     <input
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
                         id="password"
                         type="password"
                         placeholder="Password"
                         v-model="password"
                     />
+                    <router-link
+                        to="/fourwheels/forgot-password"
+                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                    >
+                        Forgot password?
+                    </router-link>
                 </div>
                 <div class="flex items-center justify-between">
                     <button

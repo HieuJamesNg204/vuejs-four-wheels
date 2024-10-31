@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from '@/pages/Login.vue';
 import Register from "@/pages/Register.vue";
+import ForgotPasswordUsernamePrompt from "@/pages/ForgotPasswordUsernamePrompt.vue";
+import ResetPassword from "@/pages/ResetPassword.vue";
 import About from "@/pages/About.vue";
 import Automakers from "@/pages/Automakers.vue";
 import CreateAutomaker from "@/pages/CreateAutomaker.vue";
@@ -15,6 +17,8 @@ import CarDetail from "@/pages/CarDetail.vue";
 const routes = [
     { path: '/fourwheels/login', component: Login },
     { path: '/fourwheels/register', component: Register },
+    { path: '/fourwheels/forgot-password', component: ForgotPasswordUsernamePrompt },
+    { path: '/fourwheels/forgot-password/:username', component: ResetPassword },
 
     // Automakers routes
     { path: '/fourwheels/automakers', component: Automakers },
