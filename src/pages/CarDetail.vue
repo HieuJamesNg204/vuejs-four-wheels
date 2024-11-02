@@ -17,23 +17,47 @@ onMounted(async () => {
         router.push('/fourwheels/login');
     }
 
-    const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
-        headers: {
-            'x-auth-token': `${token}`
+    try {
+        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+            headers: {
+                'x-auth-token': `${token}`
+            }
+        });
+    
+        userRole.value = userRes.data.role;
+    
+        const id = route.params.id;
+    
+        const res = await axios.get(`http://localhost:3000/fourwheels/cars/${id}`, {
+            headers: {
+                'x-auth-token': `${token}`
+            }
+        });
+    
+        car.value = res.data;
+    } catch (error) {
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                localStorage.setItem('token', '');
+                localStorage.setItem('username', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else if (statusCode === 404) {
+                alert('Car not found!');
+                router.back();
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+                router.back();
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+            router.back();
         }
-    });
-
-    userRole.value = userRes.data.role;
-
-    const id = route.params.id;
-
-    const res = await axios.get(`http://localhost:3000/fourwheels/cars/${id}`, {
-        headers: {
-            'x-auth-token': `${token}`
-        }
-    });
-
-    car.value = res.data;
+    }
 });
 
 const editCar = (id) => {
@@ -43,18 +67,21 @@ const editCar = (id) => {
 const deleteCar = async (id) => {
     const isConfirmed = confirm('Are you sure to delete this car? This action can\'t be undone.');
     if (isConfirmed) {
-        const res = await axios.delete(`http://localhost:3000/fourwheels/cars/${id}`, {
-            headers: {
-                'x-auth-token': `${token}`
+        try {
+            const res = await axios.delete(`http://localhost:3000/fourwheels/cars/${id}`, {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
+    
+            if (res.status === 204) {
+                alert('Car successfully deleted!');
+                router.push('/fourwheels/cars');
             }
-        });
-
-        if (res.status === 204) {
-            alert('Car deleted');
-            router.push('/fourwheels/cars');
+        } catch (error) {
+            console.error('Error while deleting the car:', error);
+            alert('There\'s an error while attempting to delete the car.');
         }
-    } else {
-        //
     }
 };
 </script>

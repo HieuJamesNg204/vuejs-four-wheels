@@ -58,19 +58,38 @@ onMounted(async () => {
 });
 
 const fetchCars = async () => {
-    const carRes = await axios.get(
-        selectedAutomaker.value
-            ? `http://localhost:3000/fourwheels/cars/getByAutomaker/${selectedAutomaker.value}`
-            : 'http://localhost:3000/fourwheels/cars',
-        {
-            headers: {
-                'x-auth-token': `${token}`
+    try {
+        const carRes = await axios.get(
+            selectedAutomaker.value
+                ? `http://localhost:3000/fourwheels/cars/getByAutomaker/${selectedAutomaker.value}`
+                : 'http://localhost:3000/fourwheels/cars',
+            {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
             }
-        }
-    );
+        );
+    
+        console.log('Cars:', carRes.data);
+        cars.value = carRes.data;
+    } catch (error) {
+        if (error.response) {
+            const statusCode = error.response.status;
 
-    console.log('Cars:', carRes.data);
-    cars.value = carRes.data;
+            if (statusCode === 401) {
+                localStorage.setItem('token', '');
+                localStorage.setItem('username', '');
+                alert('Session Expired! Please log in again to proceed!');
+                router.push('/fourwheels/login');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
+    }
 };
 
 const createCar = () => {

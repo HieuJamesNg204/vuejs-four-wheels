@@ -37,7 +37,7 @@ onMounted(async () => {
         const userRole = userRes.data.role;
 
         if (userRole === 'customer') {
-            alert('Sorry. you don\'t have permission to access this page :(');
+            alert('Sorry. You don\'t have permission to access this page.');
             router.back();
         }
 
@@ -78,15 +78,17 @@ onMounted(async () => {
                 alert('Session Expired! Please log in again to proceed!');
                 router.push('/fourwheels/login');
             } else if (statusCode === 404) {
-                alert('Automaker not found :(');
+                alert('Car not found!');
                 router.back();
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
+                router.back();
             }
         } else {
             console.error('An unexpected error occurred:', error);
             alert('An unexpected error occurred.');
+            router.back();
         }
     }
 });
@@ -115,7 +117,7 @@ const handleEdit = async () => {
         );
 
         console.log(res.data);
-        alert('Car updated');
+        alert('Car updated!');
         router.back();
     } catch (error) {
         if (error.response) {
@@ -126,13 +128,18 @@ const handleEdit = async () => {
                 localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
                 router.push('/fourwheels/login');
+            } else if (statusCode === 404) {
+                alert('Car not found!');
+                router.back();
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
+                router.back();
             }
         } else {
             console.error('An unexpected error occurred:', error);
             alert('An unexpected error occurred.');
+            router.back();
         }
     }
 }

@@ -50,15 +50,17 @@ onMounted(async () => {
                 alert('Session Expired! Please log in again to proceed!');
                 router.push('/fourwheels/login');
             } else if (statusCode === 404) {
-                alert('Automaker not found :(');
+                alert('Automaker not found!');
                 router.back();
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
+                router.back();
             }
         } else {
             console.error('An unexpected error occurred:', error);
             alert('An unexpected error occurred.');
+            router.back();
         }
     }
 });
@@ -78,7 +80,7 @@ const handleEdit = async () => {
         );
 
         console.log(res.data);
-        alert('Automaker updated');
+        alert('Automaker updated!');
         router.push('/fourwheels/automakers');
     } catch (error) {
         if (error.response) {
@@ -89,13 +91,18 @@ const handleEdit = async () => {
                 localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
                 router.push('/fourwheels/login');
+            } else if (statusCode === 404) {
+                alert('Automaker not found!');
+                router.back();
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
+                router.back();
             }
         } else {
             console.error('An unexpected error occurred:', error);
             alert('An unexpected error occurred.');
+            router.back();
         }
     }
 };

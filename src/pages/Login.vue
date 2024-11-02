@@ -22,7 +22,20 @@ const handleLogin = async () => {
 
         router.push('/fourwheels/cars');
     } catch (error) {
-        alert(`Error: ${error}`);
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                console.error('Wrong username or password:', error);
+                alert('Wrong username or password! Please try again!');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 };
 </script>

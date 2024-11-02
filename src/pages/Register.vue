@@ -26,7 +26,19 @@ const register = async () => {
         alert('Registration successful!');
         router.push('/fourwheels/login');
     } catch (error) {
-        alert(`Error: ${error}`);
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 409) {
+                alert('Username already taken!');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 };
 </script>

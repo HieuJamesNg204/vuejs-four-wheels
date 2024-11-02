@@ -17,7 +17,7 @@ const redirectToPasswordReset = async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 404) {
-                alert('Username not found :(');
+                alert('Username not found!');
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');

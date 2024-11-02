@@ -36,7 +36,7 @@ onMounted(async () => {
         const userRole = userRes.data.role;
 
         if (userRole === 'customer') {
-            alert('Sorry. you don\'t have permission to access this page :(');
+            alert('Sorry. You don\'t have permission to access this page.');
             router.back();
         }
 
@@ -91,8 +91,8 @@ const handleCreate = async () => {
             }
         );
 
-        console.log(res.data);
-        alert('Car created');
+        console.log('Car created:', res.data);
+        alert('Car created!');
         router.push('/fourwheels/cars');
     } catch (error) {
         if (error.response) {
@@ -103,15 +103,13 @@ const handleCreate = async () => {
                 localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
                 router.push('/fourwheels/login');
-            } else if (statusCode === 400) {
-                alert('Bad request. Please check your input.');
             } else {
                 console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
+                alert('An unexpected error occurred');
             }
         } else {
             console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
+            alert('An unexpected error occurred');
         }
     }
 };

@@ -25,7 +25,7 @@ onMounted(async () => {
         const userRole = userRes.data.role;
 
         if (userRole === 'customer') {
-            alert('Sorry. you don\'t have permission to access this page :(');
+            alert('Sorry. You don\'t have permission to access this page.');
             router.back();
         }
     } catch (error) {
@@ -37,6 +37,8 @@ onMounted(async () => {
                 localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
                 router.push('/fourwheels/login');
+            } else if (statusCode === 409) {
+                alert('It looks like an automaker with this name already exists.');
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
@@ -62,8 +64,8 @@ const handleCreate = async () => {
             }
         );
     
-        console.log(res.data);
-        alert('Automaker created');
+        console.log('Automaker created:', res.data);
+        alert('Automaker created!');
         router.push('/fourwheels/automakers');
     } catch (error) {
         if (error.response) {

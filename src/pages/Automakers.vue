@@ -30,7 +30,7 @@ onMounted(async () => {
             },
         });
 
-        console.log('Automakers response:', res.data);
+        console.log('Automakers:', res.data);
         automakers.value = res.data;
     } catch (error) {
         if (error.response) {
@@ -71,15 +71,16 @@ const deleteAutomaker = async (id) => {
             });
 
             if (res.status === 204) {
-                alert('Automaker deleted');
+                alert('Automaker successfully deleted!');
                 automakers.value = automakers.value.filter(
                     (automaker) => automaker._id !== id
                 );
             }
         } catch (error) {
-            alert('Failed to delete the automaker!');
+            console.error('Error while deleting the automaker:', error);
+            alert('There\'s an error while attempting to delete the automaker.');
         }
-    } else {}
+    }
 };
 
 const viewAutomakerInfo = (id) => {
