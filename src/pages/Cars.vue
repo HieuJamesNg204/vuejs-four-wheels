@@ -10,8 +10,9 @@ const cars = ref([]);
 const selectedAutomaker = ref('');
 const userRole = ref('');
 
+const token = localStorage.getItem('token');
+
 onMounted(async () => {
-    const token = localStorage.getItem('token');
     if (!token) {
         alert('You need to log in to proceed!');
         router.push('/fourwheels/login');
@@ -34,25 +35,8 @@ onMounted(async () => {
     
         console.log('Automakers:', automakerRes.data);
         automakers.value = automakerRes.data;
-    
-        let carRes;
-    
-        if (selectedAutomaker.value === '') {
-            carRes = await axios.get('http://localhost:3000/fourwheels/cars', {
-                headers: {
-                    'x-auth-token': `${token}`
-                }
-            });
-        } else {
-            carRes = await axios.get(`http://localhost:3000/fourwheels/cars/getByAutomaker/${selectedAutomaker.value}`, {
-                headers: {
-                    'x-auth-token': `${token}`
-                }
-            });
-        }
-    
-        console.log('Cars:', carRes.data);
-        cars.value = carRes.data;
+
+        fetchCars();
     } catch (error) {
         if (error.response) {
             const statusCode = error.response.status;
@@ -73,6 +57,22 @@ onMounted(async () => {
     }
 });
 
+const fetchCars = async () => {
+    const carRes = await axios.get(
+        selectedAutomaker.value
+            ? `http://localhost:3000/fourwheels/cars/getByAutomaker/${selectedAutomaker.value}`
+            : 'http://localhost:3000/fourwheels/cars',
+        {
+            headers: {
+                'x-auth-token': `${token}`
+            }
+        }
+    );
+
+    console.log('Cars:', carRes.data);
+    cars.value = carRes.data;
+};
+
 const createCar = () => {
     router.push('/fourwheels/cars/create');
 };
@@ -85,6 +85,23 @@ const viewCarInfo = (id) => {
 <template>
         <div class="container mx-auto py-10">
             <h1 class="text-3xl font-bold mb-6 text-center">Car Collection</h1>
+            <div class="flex mb-2">
+                <h3 class="text-lg font-bold">Filter Cars by Automaker</h3>
+            </div>
+            <div class="flex mb-8">
+                <select 
+                    v-model="selectedAutomaker"
+                    @change="fetchCars"
+                    name="automakerSelect" 
+                    id="automakerSelect"
+                    class="border px-2 py-1 rounded"
+                >
+                    <option value="">All Automakers</option>
+                    <option v-for="automaker in automakers" :key="automaker._id" :value="automaker._id">
+                        {{ automaker.name }}
+                    </option>
+                </select>
+            </div>
             <div v-if="userRole === 'admin'" class="flex mb-4">
                 <button class="btn-primary" @click="createCar">
                     Create Car
