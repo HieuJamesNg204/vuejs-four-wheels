@@ -1,19 +1,25 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const name = ref('');
-const token = localStorage.getItem('token');
+const token = ref('');
 
 onMounted(() => {
     name.value = localStorage.getItem('username');
+    token.value = localStorage.getItem('token');
+});
+
+watch(name, (newName) => {
+    // 
 });
 
 const handleLogout = () => {
-    localStorage.setItem('token', '');
-    localStorage.setItem('username', '');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    token.value = '';
     name.value = '';
     router.push('/fourwheels/login');
 };
