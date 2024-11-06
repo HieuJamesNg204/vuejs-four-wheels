@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import axios from 'axios';
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -10,30 +11,30 @@ const username = ref('')
 const password = ref('')
 
 const handleLogin = async () => {
+    const data = {
+        username: username.value,
+        password: password.value
+    };
+
     try {
-        const response = await fetch('http://localhost:3000/fourwheels/auth/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username.value,
-            password: password.value,
-        }),
-        })
-
-        if (!response.ok) {
-        throw new Error('Login failed')
-        }
-
-        const data = await response.json()
-        
-        // Assuming your API returns a token and username
-        auth.login(username.value, data.token)
-        router.push('/fourwheels/cars')
+        const res = await axios.post('http://localhost:3000/fourwheels/auth/login', data);
+        const token = res.data.token;
+        auth.login(username.value, token);
+        router.push('/fourwheels/cars');
     } catch (error) {
-        console.error('Login error:', error)
-        // Handle login error (you might want to add error handling UI)
+        if (error.response) {
+            const statusCode = error.response.status;
+
+            if (statusCode === 401) {
+                alert('Wrong username or password! Please try again!');
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
+        } else {
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred.');
+        }
     }
 }
 </script>

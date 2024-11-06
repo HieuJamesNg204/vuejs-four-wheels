@@ -6,11 +6,10 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const handleLogout = () => {
-  auth.logout()
-  router.push('/fourwheels/login')
+    auth.logout();
+    router.push('/fourwheels/login');
 };
 </script>
-
 
 <template>
     <nav class="bg-blue-500 p-4">
@@ -19,7 +18,7 @@ const handleLogout = () => {
                 <router-link :to="auth.isAuthenticated() ? '/fourwheels/cars' : '/fourwheels/login'">Four Wheels</router-link>
             </div>
             <div class="text-white">
-                <p v-if="auth.username !== ''">Welcome  {{ name }}</p>
+                <p v-if="auth.username !== ''">Welcome  {{ auth.username }}</p>
             </div>
             <div>
                 <router-link to="/fourwheels/about" class="text-white mr-4">About</router-link>
