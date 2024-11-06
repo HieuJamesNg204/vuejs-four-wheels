@@ -28,69 +28,69 @@ onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
-    }
-
-    try {
-        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-
-        const userRole = userRes.data.role;
-
-        if (userRole === 'customer') {
-            alert('Sorry. You don\'t have permission to access this page.');
-            router.back();
-        }
-
-        const automakerRes = await axios.get('http://localhost:3000/fourwheels/automakers', {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-        
-        automakerList.value = automakerRes.data;
-
-        const carRes = await axios.get(
-            `http://localhost:3000/fourwheels/cars/${route.params.id}`,
-            {
+    } else {
+        try {
+            const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
                 headers: {
                     'x-auth-token': `${token}`
                 }
-            }
-        );
+            });
 
-        automaker.value = carRes.data.automaker;
-        model.value = carRes.data.model;
-        year.value = carRes.data.year;
-        bodyStyle.value = carRes.data.bodyStyle;
-        price.value = carRes.data.price;
-        colour.value = carRes.data.colour;
-        engineType.value = carRes.data.engineType;
-        transmission.value = carRes.data.transmission;
-        mileage.value = carRes.data.mileage;
-        seatingCapacity.value = carRes.data.seatingCapacity;
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
+            const userRole = userRes.data.role;
 
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
-            } else if (statusCode === 404) {
-                alert('Car not found!');
+            if (userRole === 'customer') {
+                alert('Sorry. You don\'t have permission to access this page.');
                 router.back();
+            }
+
+            const automakerRes = await axios.get('http://localhost:3000/fourwheels/automakers', {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
+            
+            automakerList.value = automakerRes.data;
+
+            const carRes = await axios.get(
+                `http://localhost:3000/fourwheels/cars/${route.params.id}`,
+                {
+                    headers: {
+                        'x-auth-token': `${token}`
+                    }
+                }
+            );
+
+            automaker.value = carRes.data.automaker._id;
+            model.value = carRes.data.model;
+            year.value = carRes.data.year;
+            bodyStyle.value = carRes.data.bodyStyle;
+            price.value = carRes.data.price;
+            colour.value = carRes.data.colour;
+            engineType.value = carRes.data.engineType;
+            transmission.value = carRes.data.transmission;
+            mileage.value = carRes.data.mileage;
+            seatingCapacity.value = carRes.data.seatingCapacity;
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
+
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else if (statusCode === 404) {
+                    alert('Car not found!');
+                    router.back();
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                    router.back();
+                }
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
                 router.back();
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
-            router.back();
         }
     }
 });
@@ -156,8 +156,8 @@ const handleEdit = async () => {
                         Automaker
                     </label>
                     <select v-model="automaker" name="automaker" id="automaker" class="w-full p-2 border border-gray-300 rounded">
-                        <option v-for="automaker in automakerList" :key="automaker._id" :value="automaker._id">
-                            {{ automaker.name }}
+                        <option v-for="maker in automakerList" :key="maker._id" :value="maker._id">
+                            {{ maker.name }}
                         </option>
                     </select>
                 </div>

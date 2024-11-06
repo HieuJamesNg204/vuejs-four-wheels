@@ -22,42 +22,42 @@ onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed!');
         router.push('/fourwheels/login');
-    }
+    } else {
+        try {
+            const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
 
-    try {
-        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
+            userRole.value = userRes.data.role;
 
-        userRole.value = userRes.data.role;
+            const automakerRes = await axios.get('http://localhost:3000/fourwheels/automakers', {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
+        
+            console.log('Automakers:', automakerRes.data);
+            automakers.value = automakerRes.data;
 
-        const automakerRes = await axios.get('http://localhost:3000/fourwheels/automakers', {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-    
-        console.log('Automakers:', automakerRes.data);
-        automakers.value = automakerRes.data;
+            fetchCars();
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-        fetchCars();
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                }
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
         }
     }
 });
@@ -133,7 +133,7 @@ const viewCarInfo = (id) => {
         </div>
 
         <div class="flex mb-2">
-            <h3 class="text-lg font-bold mb-2">Filter by Price Range (Enter at least one input, and leaving one will show all prices)</h3>
+            <h3 class="text-lg font-bold mb-2">Filter by Price Range (Enter at least one input, and leaving both empty will show all prices)</h3>
         </div>
         <div class="flex mb-8">
             <form class="flex items-center space-x-4">
@@ -143,9 +143,8 @@ const viewCarInfo = (id) => {
                         type="number"
                         id="minPrice"
                         v-model="minPrice"
-                        @change="fetchCars"
                         placeholder="Minimum price"
-                        class="border px-2 py-1 rounded w-32"
+                        class="border px-2 py-1 rounded w-64"
                     />
                 </div>
                 <div class="flex items-center">
@@ -154,9 +153,8 @@ const viewCarInfo = (id) => {
                         type="number"
                         id="maxPrice"
                         v-model="maxPrice"
-                        @change="fetchCars"
                         placeholder="Maximum price"
-                        class="border px-2 py-1 rounded w-32"
+                        class="border px-2 py-1 rounded w-64"
                     />
                 </div>
                 <button

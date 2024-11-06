@@ -17,52 +17,52 @@ onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
-    }
-
-    try {
-        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-
-        const userRole = userRes.data.role;
-
-        if (userRole === 'customer') {
-            alert('Sorry. you don\'t have permission to access this page :(');
-            router.back();
-        }
-
-        const automakerRes = await axios.get(
-            `http://localhost:3000/fourwheels/automakers/${route.params.id}`,
-            {
+    } else {
+        try {
+            const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
                 headers: {
                     'x-auth-token': `${token}`
                 }
-            }
-        );
+            });
 
-        text.value = automakerRes.data.name;
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
+            const userRole = userRes.data.role;
 
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
-            } else if (statusCode === 404) {
-                alert('Automaker not found!');
+            if (userRole === 'customer') {
+                alert('Sorry. You don\'t have permission to access this page!');
                 router.back();
+            }
+
+            const automakerRes = await axios.get(
+                `http://localhost:3000/fourwheels/automakers/${route.params.id}`,
+                {
+                    headers: {
+                        'x-auth-token': `${token}`
+                    }
+                }
+            );
+
+            text.value = automakerRes.data.name;
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
+
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else if (statusCode === 404) {
+                    alert('Automaker not found!');
+                    router.back();
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                    router.back();
+                }
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
                 router.back();
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
-            router.back();
         }
     }
 });
@@ -96,7 +96,7 @@ const handleEdit = async () => {
                 alert('Automaker not found!');
                 router.back();
             } else if (statusCode === 409) {
-                alert('It looks like the new name for the automaker is coincident to another existing one');
+                alert('It looks like the new name for the automaker is coincident to another existing one.');
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');

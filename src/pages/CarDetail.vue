@@ -18,46 +18,46 @@ onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
-    }
+    } else {
+        try {
+            const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
+        
+            userRole.value = userRes.data.role;
+        
+            const id = route.params.id;
+        
+            const res = await axios.get(`http://localhost:3000/fourwheels/cars/${id}`, {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
+        
+            car.value = res.data;
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-    try {
-        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-    
-        userRole.value = userRes.data.role;
-    
-        const id = route.params.id;
-    
-        const res = await axios.get(`http://localhost:3000/fourwheels/cars/${id}`, {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-    
-        car.value = res.data;
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
-            } else if (statusCode === 404) {
-                alert('Car not found!');
-                router.back();
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else if (statusCode === 404) {
+                    alert('Car not found!');
+                    router.back();
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                    router.back();
+                }
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
                 router.back();
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
-            router.back();
         }
     }
 });

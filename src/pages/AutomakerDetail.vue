@@ -16,40 +16,40 @@ onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
-    }
+    } else {
+        try {
+            const id = route.params.id;
+        
+            const res = await axios.get(`http://localhost:3000/fourwheels/automakers/${id}`, {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            });
+        
+            console.log('Automaker:', res.data);
+            automaker.value = res.data;
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-    try {
-        const id = route.params.id;
-    
-        const res = await axios.get(`http://localhost:3000/fourwheels/automakers/${id}`, {
-            headers: {
-                'x-auth-token': `${token}`
-            }
-        });
-    
-        console.log('Automaker:', res.data);
-        automaker.value = res.data;
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
-            } else if (statusCode === 404) {
-                alert('Automaker not found.');
-                router.back();
-            }
-            else {
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else if (statusCode === 404) {
+                    alert('Automaker not found.');
+                    router.back();
+                }
+                else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                    router.back();
+                }
+            } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
                 router.back();
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
-            router.back();
         }
     }
 });

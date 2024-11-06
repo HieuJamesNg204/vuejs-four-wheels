@@ -16,40 +16,41 @@ onMounted(async () => {
     if (!token) {
         alert('You need to log in to proceed!');
         router.push('/fourwheels/login');
-    }
+        return;
+    } else {
+        try {
+            const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
+                headers: {
+                    'x-auth-token': `${token}`,
+                },
+            });
 
-    try {
-        const userRes = await axios.get('http://localhost:3000/fourwheels/auth', {
-            headers: {
-                'x-auth-token': `${token}`,
-            },
-        });
+            userRole.value = userRes.data.role;
 
-        userRole.value = userRes.data.role;
+            const res = await axios.get('http://localhost:3000/fourwheels/automakers', {
+                headers: {
+                    'x-auth-token': `${token}`,
+                },
+            });
 
-        const res = await axios.get('http://localhost:3000/fourwheels/automakers', {
-            headers: {
-                'x-auth-token': `${token}`,
-            },
-        });
+            console.log('Automakers:', res.data);
+            automakers.value = res.data;
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-        console.log('Automakers:', res.data);
-        automakers.value = res.data;
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                }
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
         }
     }
 });
