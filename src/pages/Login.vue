@@ -1,43 +1,41 @@
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
-const username = ref('');
-const password = ref('');
-const router = useRouter();
+const router = useRouter()
+const auth = useAuthStore()
+
+const username = ref('')
+const password = ref('')
 
 const handleLogin = async () => {
-    const data = {
-        username: username.value,
-        password: password.value
-    };
-    
     try {
-        const res = await axios.post('http://localhost:3000/fourwheels/auth/login', data);
-        alert('Login successful');
-        console.log('Login successful:', res.data.token);
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('username', username.value);
+        const response = await fetch('http://localhost:3000/fourwheels/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username.value,
+            password: password.value,
+        }),
+        })
 
-        router.push('/fourwheels/cars');
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 401) {
-                console.error('Wrong username or password:', error);
-                alert('Wrong username or password! Please try again!');
-            } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
-            }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
+        if (!response.ok) {
+        throw new Error('Login failed')
         }
+
+        const data = await response.json()
+        
+        // Assuming your API returns a token and username
+        auth.login(username.value, data.token)
+        router.push('/fourwheels/cars')
+    } catch (error) {
+        console.error('Login error:', error)
+        // Handle login error (you might want to add error handling UI)
     }
-};
+}
 </script>
 
 <template>
