@@ -10,7 +10,7 @@ const username = ref('');
 const redirectToPasswordReset = async () => {
     try {
         const res = await axios.get(`http://localhost:3000/fourwheels/auth/${username.value}`);
-        console.log('Username exists:', res);
+        console.log('Username exists:', res.data);
         router.push(`/fourwheels/forgot-password/${username.value}`);
     } catch (error) {
         if (error.response) {
@@ -55,11 +55,12 @@ const redirectToPasswordReset = async () => {
                     >
                         Proceed
                     </button>
+                    <p>Remember password?</p>
                     <router-link
                         to="/fourwheels/login"
                         class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                     >
-                        Finally remember password?
+                        Log in
                     </router-link>
                 </div>
             </form>
