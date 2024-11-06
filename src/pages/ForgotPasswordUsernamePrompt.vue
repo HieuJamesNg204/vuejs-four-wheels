@@ -55,12 +55,11 @@ const redirectToPasswordReset = async () => {
                     >
                         Proceed
                     </button>
-                    <p>Remember password?</p>
                     <router-link
                         to="/fourwheels/login"
                         class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                     >
-                        Log in
+                        Finally remember password?
                     </router-link>
                 </div>
             </form>
