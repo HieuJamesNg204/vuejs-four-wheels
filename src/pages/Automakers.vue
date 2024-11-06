@@ -2,6 +2,9 @@
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -37,9 +40,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else {
                 console.error('An unexpected error occurred:', error);
@@ -77,8 +79,21 @@ const deleteAutomaker = async (id) => {
                 );
             }
         } catch (error) {
-            console.error('Error while deleting the automaker:', error);
-            alert('There\'s an error while attempting to delete the automaker.');
+            if (error.response) {
+                const statusCode = error.response.status;
+
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                }
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+            }
         }
     }
 };

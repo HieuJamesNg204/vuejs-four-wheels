@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const text = ref('');
 
@@ -45,9 +48,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('username', '');
-                localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else if (statusCode === 404) {
                 alert('Automaker not found!');
@@ -87,13 +89,14 @@ const handleEdit = async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('username', '');
-                localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else if (statusCode === 404) {
                 alert('Automaker not found!');
                 router.back();
+            } else if (statusCode === 409) {
+                alert('It looks like the new name for the automaker is coincident to another existing one');
             } else {
                 console.error('An unexpected error occurred:', error);
                 alert('An unexpected error occurred.');

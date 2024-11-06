@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const automaker = ref({});
 
@@ -31,9 +34,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else if (statusCode === 404) {
                 alert('Automaker not found.');

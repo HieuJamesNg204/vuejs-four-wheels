@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -53,9 +56,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else {
                 console.error('An unexpected error occurred:', error);
@@ -99,9 +101,8 @@ const handleCreate = async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('username', '');
-                localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else {
                 console.error('An unexpected error occurred:', error);

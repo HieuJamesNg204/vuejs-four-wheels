@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -33,9 +36,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else if (statusCode === 409) {
                 alert('It looks like an automaker with this name already exists.');
@@ -72,9 +74,8 @@ const handleCreate = async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('username', '');
-                localStorage.setItem('token', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else if (statusCode === 400) {
                 alert('Bad request. Please check your input.');

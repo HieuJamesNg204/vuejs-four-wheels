@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const car = ref({});
 const userRole = ref('');
@@ -40,9 +43,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else if (statusCode === 404) {
                 alert('Car not found!');
@@ -79,8 +81,26 @@ const deleteCar = async (id) => {
                 router.push('/fourwheels/cars');
             }
         } catch (error) {
-            console.error('Error while deleting the car:', error);
-            alert('There\'s an error while attempting to delete the car.');
+            if (error.response) {
+                const statusCode = error.response.status;
+
+                if (statusCode === 401) {
+                    alert('Session Expired! Please log in again to proceed!');
+                    auth.logout();
+                    router.push('/fourwheels/login');
+                } else if (statusCode === 404) {
+                    alert('Car not found!');
+                    router.back();
+                } else {
+                    console.error('An unexpected error occurred:', error);
+                    alert('An unexpected error occurred.');
+                    router.back();
+                }
+            } else {
+                console.error('An unexpected error occurred:', error);
+                alert('An unexpected error occurred.');
+                router.back();
+            }
         }
     }
 };

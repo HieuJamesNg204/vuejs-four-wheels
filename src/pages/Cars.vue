@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -9,6 +12,9 @@ const automakers = ref([]);
 const cars = ref([]);
 const selectedAutomaker = ref('');
 const userRole = ref('');
+
+const minPrice = ref('');
+const maxPrice = ref('');
 
 const token = localStorage.getItem('token');
 
@@ -42,9 +48,8 @@ onMounted(async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else {
                 console.error('An unexpected error occurred:', error);
@@ -58,17 +63,23 @@ onMounted(async () => {
 });
 
 const fetchCars = async () => {
+    let url = 'http://localhost:3000/fourwheels/cars' 
+        + (selectedAutomaker.value ? `/getByAutomaker/${selectedAutomaker.value}` : '');
+    
+    if (minPrice.value && maxPrice.value) {
+        url += `?minPrice=${minPrice.value}&maxPrice=${maxPrice.value}`;
+    } else if (minPrice.value) {
+        url += `?minPrice=${minPrice.value}`;
+    } else if (maxPrice.value) {
+        url += `?maxPrice=${maxPrice.value}`;
+    }
+
     try {
-        const carRes = await axios.get(
-            selectedAutomaker.value
-                ? `http://localhost:3000/fourwheels/cars/getByAutomaker/${selectedAutomaker.value}`
-                : 'http://localhost:3000/fourwheels/cars',
-            {
-                headers: {
-                    'x-auth-token': `${token}`
-                }
+        let carRes = await axios.get(url, {
+            headers: {
+                'x-auth-token': `${token}`
             }
-        );
+        });
     
         console.log('Cars:', carRes.data);
         cars.value = carRes.data;
@@ -77,9 +88,8 @@ const fetchCars = async () => {
             const statusCode = error.response.status;
 
             if (statusCode === 401) {
-                localStorage.setItem('token', '');
-                localStorage.setItem('username', '');
                 alert('Session Expired! Please log in again to proceed!');
+                auth.logout();
                 router.push('/fourwheels/login');
             } else {
                 console.error('An unexpected error occurred:', error);
@@ -121,6 +131,44 @@ const viewCarInfo = (id) => {
                 </option>
             </select>
         </div>
+
+        <div class="flex mb-2">
+            <h3 class="text-lg font-bold mb-2">Filter by Price Range (Enter at least one input, and leaving one will show all prices)</h3>
+        </div>
+        <div class="flex mb-8">
+            <form class="flex items-center space-x-4">
+                <div class="flex items-center">
+                    <label for="minPrice" class="mr-2">Min:</label>
+                    <input
+                        type="number"
+                        id="minPrice"
+                        v-model="minPrice"
+                        @change="fetchCars"
+                        placeholder="Minimum price"
+                        class="border px-2 py-1 rounded w-32"
+                    />
+                </div>
+                <div class="flex items-center">
+                    <label for="maxPrice" class="mr-2">Max:</label>
+                    <input
+                        type="number"
+                        id="maxPrice"
+                        v-model="maxPrice"
+                        @change="fetchCars"
+                        placeholder="Maximum price"
+                        class="border px-2 py-1 rounded w-32"
+                    />
+                </div>
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                    @click="fetchCars"
+                >
+                    Filter
+                </button>
+            </form>
+        </div>
+
         <div v-if="userRole === 'admin'" class="flex mb-4">
             <button class="btn-primary" @click="createCar">
                 Create Car
