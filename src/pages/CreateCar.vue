@@ -20,6 +20,7 @@ const engineType = ref('');
 const transmission = ref('');
 const mileage = ref(0);
 const seatingCapacity = ref(0);
+const imagePath = ref('');
 
 const token = localStorage.getItem('token');
 
@@ -70,22 +71,35 @@ onMounted(async () => {
     }
 });
 
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            imagePath.value = reader.result;
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
 const handleCreate = async () => {
     try {
+        const formData = new FormData();
+        formData.append('automaker', automaker.value);
+        formData.append('model', model.value);
+        formData.append('year', year.value);
+        formData.append('bodyStyle', bodyStyle.value);
+        formData.append('price', price.value);
+        formData.append('colour', colour.value);
+        formData.append('engineType', engineType.value);
+        formData.append('transmission', transmission.value);
+        formData.append('mileage', mileage.value);
+        formData.append('seatingCapacity', seatingCapacity.value);
+        formData.append('image', document.querySelector('input[type="file"]').files[0]);
+        
         const res = await axios.post(
             'http://localhost:3000/fourwheels/cars',
-            {
-                automaker: automaker.value,
-                model: model.value,
-                year: year.value,
-                bodyStyle: bodyStyle.value,
-                price: price.value,
-                colour: colour.value,
-                engineType: engineType.value,
-                transmission: transmission.value,
-                mileage: mileage.value,
-                seatingCapacity: seatingCapacity.value
-            },
+            formData,
             {
                 headers: {
                     'x-auth-token': `${token}`
@@ -125,7 +139,7 @@ const handleCreate = async () => {
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="automaker">
                         Automaker
                     </label>
-                    <select v-model="automaker" name="automaker" id="automaker" class="w-full p-2 border border-gray-300 rounded">
+                    <select v-model="automaker" name="automaker" id="automaker" class="w-full p-2 border border-gray-300 rounded" required>
                         <option v-for="automaker in automakerList" :key="automaker._id" :value="automaker._id">
                             {{ automaker.name }}
                         </option>
@@ -141,6 +155,7 @@ const handleCreate = async () => {
                         type="text"
                         placeholder="Car model"
                         v-model="model"
+                        required
                     >
                 </div>
                 <div class="mb-4">
@@ -153,6 +168,7 @@ const handleCreate = async () => {
                         type="number"
                         placeholder="Year of manufacture"
                         v-model="year"
+                        required
                     >
                 </div>
                 <div class="mb-4">
@@ -165,6 +181,7 @@ const handleCreate = async () => {
                         type="text"
                         placeholder="Body Style (Sedan, Hatchback, etc)"
                         v-model="bodyStyle"
+                        required
                     >
                 </div>
                 <div class="mb-4">
@@ -177,6 +194,7 @@ const handleCreate = async () => {
                         type="number"
                         placeholder="Price"
                         v-model="price"
+                        required
                     >
                 </div>
                 <div class="mb-4">
@@ -189,6 +207,7 @@ const handleCreate = async () => {
                         type="text"
                         placeholder="Colour"
                         v-model="colour"
+                        required
                     >
                 </div>
                 <div class="mb-4">
@@ -201,13 +220,14 @@ const handleCreate = async () => {
                         type="text"
                         placeholder="Engine Type (Petrol, Diesel, etc)"
                         v-model="engineType"
+                        required
                     >
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="transmission">
                         Transmission
                     </label>
-                    <select v-model="transmission" name="transmission" id="transmission" class="w-full p-2 border border-gray-300 rounded">
+                    <select v-model="transmission" name="transmission" id="transmission" class="w-full p-2 border border-gray-300 rounded" required>
                         <option value="Manual">Manual</option>
                         <option value="Automatic">Automatic</option>
                     </select>
@@ -222,6 +242,7 @@ const handleCreate = async () => {
                         type="number"
                         placeholder="Mileage In Kilometres"
                         v-model="mileage"
+                        required
                     >
                 </div>
                 <div class="mb-4">
@@ -234,7 +255,12 @@ const handleCreate = async () => {
                         type="number"
                         placeholder="Seating Capacity"
                         v-model="seatingCapacity"
+                        required
                     >
+                </div>
+                <div class="mb-4">
+                    <img :src="imagePath" class="uploading-image" alt="Image Preview" v-if="imagePath" />
+                    <input type="file" accept="image/*" @change="handleImageUpload" required>
                 </div>
                 <div class="flex items-center">
                     <button 
@@ -256,3 +282,9 @@ const handleCreate = async () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.uploading-image {
+    display: flex;
+}
+</style>

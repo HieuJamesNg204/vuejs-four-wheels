@@ -108,12 +108,13 @@ const deleteCar = async (id) => {
 
 <template>
     <div class="flex items-center justify-center min-h-screen bg-white p-4">
-        <img 
-            class="mr-4 w-full h-full rounded-lg object-cover" 
-            src="https://www.toyota.com.vn//Resources/Images/011DEA3A01BBE6EFEEB74DCB69E50997.png" 
-            alt="Car image" 
-        />
-        <div class="w-full max-w-md bg-gray-200 rounded-lg shadow-lg p-6">
+        <div class="w-full max-w-3xl bg-gray-200 rounded-lg shadow-lg p-6">
+            <img 
+                class="mr-4 w-full h-full rounded-lg object-cover" 
+                v-if="car.automaker"
+                :src="`http://localhost:3000/${car.image}`" 
+                :alt="`${car.automaker.name} ${car.model} ${car.year}`" 
+            />
             <h1 v-if="car.automaker" class="text-2xl font-bold text-black mb-4 text-center">
                 {{ car.automaker.name }} {{ car.model }} {{ car.year }} - {{ car.price }} VND
             </h1>

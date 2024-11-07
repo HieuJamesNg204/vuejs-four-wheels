@@ -175,7 +175,11 @@ const viewCarInfo = (id) => {
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Cards -->
             <div v-for="car in cars" :key="car._id" class="max-w-sm rounded overflow-hidden shadow-lg bg-gray-200">
-                <img class="w-full h-48 object-cover" src="https://www.toyota.com.vn//Resources/Images/011DEA3A01BBE6EFEEB74DCB69E50997.png" alt="Car image" />
+                <img 
+                    class="w-full h-48 object-cover" 
+                    :src="`http://localhost:3000/${car.image}`" 
+                    :alt="`${car.automaker.name} ${car.model} ${car.year}`" 
+                />
                 <div class="p-4">
                     <h2 class="font-bold text-xl mb-2">{{ car.automaker.name }} {{ car.model }}</h2>
                     <p class="text-gray-700 text-base">Year: {{ car.year }}</p>
