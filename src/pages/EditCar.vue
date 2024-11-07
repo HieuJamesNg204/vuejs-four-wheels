@@ -18,6 +18,7 @@ const engineType = ref('');
 const transmission = ref('');
 const mileage = ref(0);
 const seatingCapacity = ref(0);
+const imagePath = ref('');
 
 const route = useRoute();
 const router = useRouter();
@@ -95,22 +96,38 @@ onMounted(async () => {
     }
 });
 
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            imagePath.value = reader.result;
+        }
+        reader.readAsDataURL(file);
+    }
+};
+
 const handleEdit = async () => {
     try {
+        const formData = new FormData();
+        formData.append('automaker', automaker.value);
+        formData.append('model', model.value);
+        formData.append('year', year.value);
+        formData.append('bodyStyle', bodyStyle.value);
+        formData.append('price', price.value);
+        formData.append('colour', colour.value);
+        formData.append('engineType', engineType.value);
+        formData.append('transmission', transmission.value);
+        formData.append('mileage', mileage.value);
+        formData.append('seatingCapacity', seatingCapacity.value);
+
+        if (imagePath.value) {
+            formData.append('image', document.querySelector('input[type="file"]').files[0]);
+        }
+
         const res = await axios.put(
             `http://localhost:3000/fourwheels/cars/${route.params.id}`,
-            {
-                automaker: automaker.value,
-                model: model.value,
-                year: year.value,
-                bodyStyle: bodyStyle.value,
-                price: price.value,
-                colour: colour.value,
-                engineType: engineType.value,
-                transmission: transmission.value,
-                mileage: mileage.value,
-                seatingCapacity: seatingCapacity.value
-            },
+            formData,
             {
                 headers: {
                     'x-auth-token': `${token}`
@@ -266,6 +283,13 @@ const handleEdit = async () => {
                         v-model="seatingCapacity"
                     >
                 </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                        New Image (Leaving this empty will use the old one)
+                    </label>
+                    <img :src="imagePath" class="uploading-image" alt="Image Preview" v-if="imagePath" />
+                    <input type="file" accept="image/*" @change="handleImageUpload" required>
+                </div>
                 <div class="flex items-center">
                     <button 
                         class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -286,3 +310,9 @@ const handleEdit = async () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.uploading-image {
+    display: flex;
+}
+</style>

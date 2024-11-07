@@ -80,7 +80,7 @@ const handleImageUpload = (event) => {
         }
         reader.readAsDataURL(file);
     }
-}
+};
 
 const handleCreate = async () => {
     try {
