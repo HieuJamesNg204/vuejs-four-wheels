@@ -260,6 +260,7 @@ const handleCreate = async () => {
                     >
                 </div>
                 <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Car Image</label>
                     <img :src="imagePath" class="uploading-image" alt="Image Preview" v-if="imagePath" />
                     <input type="file" accept="image/*" @change="handleImageUpload" required>
                 </div>
