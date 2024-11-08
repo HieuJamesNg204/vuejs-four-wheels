@@ -12,6 +12,7 @@ const router = useRouter();
 const route = useRoute();
 
 onMounted(async () => {
+    document.title = 'Automaker Details - Four Wheels';
     const token = localStorage.getItem('token');
     if (!token) {
         alert('You need to log in to proceed');
@@ -28,6 +29,7 @@ onMounted(async () => {
         
             console.log('Automaker:', res.data);
             automaker.value = res.data;
+            document.title = `${automaker.value.name} - Four Wheels`;
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;
@@ -39,8 +41,7 @@ onMounted(async () => {
                 } else if (statusCode === 404) {
                     alert('Automaker not found.');
                     router.back();
-                }
-                else {
+                } else {
                     console.error('An unexpected error occurred:', error);
                     alert('An unexpected error occurred.');
                     router.back();

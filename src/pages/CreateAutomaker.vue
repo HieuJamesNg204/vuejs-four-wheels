@@ -13,6 +13,7 @@ const text = ref('');
 const token = localStorage.getItem('token');
 
 onMounted(async () => {
+    document.title = 'Add automaker - Four Wheels';
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');

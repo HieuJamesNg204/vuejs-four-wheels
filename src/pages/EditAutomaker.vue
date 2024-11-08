@@ -14,6 +14,7 @@ const router = useRouter();
 const token = localStorage.getItem('token');
 
 onMounted(async () => {
+    document.title = 'Edit automaker - Four Wheels';
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
@@ -42,6 +43,8 @@ onMounted(async () => {
             );
 
             text.value = automakerRes.data.name;
+
+            document.title = `Edit automaker ${text.value} - Four Wheels`;
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;

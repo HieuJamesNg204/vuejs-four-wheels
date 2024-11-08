@@ -1,3 +1,11 @@
+<script setup>
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    document.title = 'About Four Wheels';
+});
+</script>
+
 <template>
     <div class="flex items-center justify-center min-h-screen bg-white p-4">
         <div class="w-full max-w-md bg-gray-200 rounded-lg shadow-lg p-6">

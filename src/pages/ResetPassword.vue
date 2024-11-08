@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -8,6 +8,10 @@ const router = useRouter();
 
 const newPassword = ref('');
 const confirmNewPassword = ref('');
+
+onMounted(() => {
+    document.title = 'Reset password - Four Wheels';
+});
 
 const handlePasswordChange = async () => {
     if (newPassword.value !== confirmNewPassword.value) {

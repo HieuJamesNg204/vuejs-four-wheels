@@ -19,6 +19,7 @@ const maxPrice = ref('');
 const token = localStorage.getItem('token');
 
 onMounted(async () => {
+    document.title = 'Car collection - Four Wheels';
     if (!token) {
         alert('You need to log in to proceed!');
         router.push('/fourwheels/login');

@@ -12,6 +12,7 @@ const automakers = ref([]);
 const userRole = ref('');
 
 onMounted(async () => {
+    document.title = 'Automakers - Four Wheels';
     const token = localStorage.getItem('token');
     if (!token) {
         alert('You need to log in to proceed!');

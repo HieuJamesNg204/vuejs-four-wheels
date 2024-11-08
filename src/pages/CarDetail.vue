@@ -15,6 +15,7 @@ const route = useRoute();
 const token = localStorage.getItem('token');
 
 onMounted(async () => {
+    document.title = 'Car details - Four Wheels';
     if (!token) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
@@ -37,6 +38,8 @@ onMounted(async () => {
             });
         
             car.value = res.data;
+
+            document.title = `${car.value.automaker.name} ${car.value.model} ${car.value.year} - Four Wheels`;
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;

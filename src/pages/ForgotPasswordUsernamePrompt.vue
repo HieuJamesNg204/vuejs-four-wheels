@@ -1,11 +1,15 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const username = ref('');
+
+onMounted(() => {
+    document.title = 'Forgot password - Four Wheels';
+});
 
 const redirectToPasswordReset = async () => {
     try {

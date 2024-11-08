@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -9,6 +9,10 @@ const username = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
 const role = ref('admin');
+
+onMounted(() => {
+    document.title = 'Register - Four Wheels';
+});
 
 const register = async () => {
     if (password.value !== passwordConfirmation.value) {

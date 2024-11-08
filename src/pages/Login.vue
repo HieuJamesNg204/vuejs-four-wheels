@@ -1,14 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import axios from 'axios';
 
-const router = useRouter()
-const auth = useAuthStore()
+const router = useRouter();
+const auth = useAuthStore();
 
-const username = ref('')
-const password = ref('')
+const username = ref('');
+const password = ref('');
+
+onMounted(() => {
+    document.title = 'Login - Four Wheels';
+});
 
 const handleLogin = async () => {
     const data = {
@@ -36,7 +40,7 @@ const handleLogin = async () => {
             alert('An unexpected error occurred.');
         }
     }
-}
+};
 </script>
 
 <template>

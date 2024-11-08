@@ -71,6 +71,8 @@ onMounted(async () => {
             transmission.value = carRes.data.transmission;
             mileage.value = carRes.data.mileage;
             seatingCapacity.value = carRes.data.seatingCapacity;
+
+            document.title = `Edit ${carRes.data.automaker.name} ${model.value} ${year.value} - Four Wheels`;
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;
