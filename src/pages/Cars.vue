@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
@@ -15,6 +15,9 @@ const userRole = ref('');
 
 const minPrice = ref('');
 const maxPrice = ref('');
+
+const currentPage = ref(1);
+const itemsPerPage = 8;
 
 const token = localStorage.getItem('token');
 
@@ -84,6 +87,7 @@ const fetchCars = async () => {
     
         console.log('Cars:', carRes.data);
         cars.value = carRes.data;
+        currentPage.value = 1;
     } catch (error) {
         if (error.response) {
             const statusCode = error.response.status;
@@ -102,6 +106,34 @@ const fetchCars = async () => {
         }
     }
 };
+
+const totalPages = computed(() => Math.ceil(cars.value.length / itemsPerPage));
+
+const paginatedCars = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return cars.value.slice(start, end);
+});
+
+const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+    }
+};
+
+const prevPage = () => {
+    if (currentPage.value > 1) {
+        currentPage.value--;
+    }
+};
+
+const toFirst = () => {
+    currentPage.value = 1;
+}
+
+const toLast = () => {
+    currentPage.value = totalPages.value;
+}
 
 const createCar = () => {
     router.push('/fourwheels/cars/create');
@@ -173,9 +205,40 @@ const viewCarInfo = (id) => {
                 Create Car
             </button>
         </div>
+        <div class="text-center mb-4">
+            <button 
+                @click="toFirst" 
+                :disabled="currentPage === 1" 
+                class="mr-1 px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+            >
+                <<
+            </button>
+            <button 
+                @click="prevPage" 
+                :disabled="currentPage === 1" 
+                class="mr-4 px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+            >
+                <
+            </button>
+            <span class="mr-4">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button 
+                @click="nextPage" 
+                :disabled="currentPage === totalPages"
+                class=" mr-1 px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+            >
+                >
+            </button>
+            <button 
+                @click="toLast" 
+                :disabled="currentPage === totalPages"
+                class="px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+            >
+                >>
+            </button>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Cards -->
-            <div v-for="car in cars" :key="car._id" class="max-w-sm rounded overflow-hidden shadow-lg bg-gray-200">
+            <div v-for="car in paginatedCars" :key="car._id" class="max-w-sm rounded overflow-hidden shadow-lg bg-gray-200">
                 <img 
                     class="w-full h-48 object-cover" 
                     :src="`http://localhost:3000/${car.image}`" 
