@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { handleApiError } from '@/utils/errorHandler';
 
 const auth = useAuthStore();
 
@@ -74,26 +75,7 @@ onMounted(async () => {
 
             document.title = `Edit ${carRes.data.automaker.name} ${model.value} ${year.value} - Four Wheels`;
         } catch (error) {
-            if (error.response) {
-                const statusCode = error.response.status;
-
-                if (statusCode === 401) {
-                    alert('Session Expired! Please log in again to proceed!');
-                    auth.logout();
-                    router.push('/fourwheels/login');
-                } else if (statusCode === 404) {
-                    alert('Car not found!');
-                    router.back();
-                } else {
-                    console.error('An unexpected error occurred:', error);
-                    alert('An unexpected error occurred.');
-                    router.back();
-                }
-            } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
-                router.back();
-            }
+            handleApiError(error, auth, router);
         }
     }
 });
@@ -141,26 +123,7 @@ const handleEdit = async () => {
         alert('Car updated!');
         router.back();
     } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 401) {
-                alert('Session Expired! Please log in again to proceed!');
-                auth.logout();
-                router.push('/fourwheels/login');
-            } else if (statusCode === 404) {
-                alert('Car not found!');
-                router.back();
-            } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
-                router.back();
-            }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
-            router.back();
-        }
+        handleApiError(error, auth, router);
     }
 }
 </script>

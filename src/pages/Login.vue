@@ -10,6 +10,8 @@ const auth = useAuthStore();
 const username = ref('');
 const password = ref('');
 
+const userErrorMessage = ref('');
+
 onMounted(() => {
     document.title = 'Login - Four Wheels';
 });
@@ -29,15 +31,15 @@ const handleLogin = async () => {
         if (error.response) {
             const statusCode = error.response.status;
 
-            if (statusCode === 401) {
-                alert('Wrong username or password! Please try again!');
+            if (statusCode === 400) {
+                userErrorMessage.value = error.response.data.errors[0].msg;
+            } else if (statusCode === 401) {
+                userErrorMessage.value = error.response.data;
             } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
+                alert(error.response.data);
             }
         } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
+            alert('An unexpected network error occurred.');
         }
     }
 };
@@ -68,12 +70,15 @@ const handleLogin = async () => {
                         Password
                     </label>
                     <input
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="password"
                         type="password"
                         placeholder="Password"
                         v-model="password"
                     />
+                    <div v-if="userErrorMessage" class="text-red-500 text-sm">
+                        {{ userErrorMessage }}
+                    </div>
                     <router-link
                         to="/fourwheels/forgot-password"
                         class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"

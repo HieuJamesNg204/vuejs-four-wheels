@@ -10,38 +10,40 @@ const password = ref('');
 const passwordConfirmation = ref('');
 const role = ref('admin');
 
+const userErrorMessage = ref('');
+
 onMounted(() => {
     document.title = 'Register - Four Wheels';
 });
 
 const register = async () => {
     if (password.value !== passwordConfirmation.value) {
-        alert('Passwords do not match!');
-        return;
-    }
+        userErrorMessage.value = 'Passwords do not match.';
+    } else {
+        try {
+            await axios.post('http://localhost:3000/fourwheels/auth/register', {
+                username: username.value,
+                password: password.value,
+                role: role.value,
+            });
+            
+            console.log(`Registration successful`);
+            alert('Registration successful!');
+            router.push('/fourwheels/login');
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-    try {
-        const response = await axios.post('http://localhost:3000/fourwheels/auth/register', {
-            username: username.value,
-            password: password.value,
-            role: role.value,
-        });
-        console.log(`Registration successful: ${response.data}`);
-        alert('Registration successful!');
-        router.push('/fourwheels/login');
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 409) {
-                alert('Username already taken!');
+                if (statusCode === 409) {
+                    userErrorMessage.value = error.response.data;
+                } else if (statusCode === 400) {
+                    userErrorMessage.value = error.response.data.errors[0].msg;
+                } else {
+                    alert(error.response.data);
+                }
             } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
+                alert('An unexpected network error occurred.');
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
         }
     }
 };
@@ -93,6 +95,9 @@ const register = async () => {
                         placeholder="Confirm Password"
                         v-model="passwordConfirmation"
                     />
+                    <div v-if="userErrorMessage" class="text-red-500 text-sm">
+                        {{ userErrorMessage }}
+                    </div>
                 </div>
                 <div class="mb-6">
                     <label

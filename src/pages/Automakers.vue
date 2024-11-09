@@ -3,6 +3,7 @@ import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import { handleApiError } from "@/utils/errorHandler";
 
 const auth = useAuthStore();
 
@@ -37,21 +38,7 @@ onMounted(async () => {
             console.log('Automakers:', res.data);
             automakers.value = res.data;
         } catch (error) {
-            if (error.response) {
-                const statusCode = error.response.status;
-
-                if (statusCode === 401) {
-                    alert('Session Expired! Please log in again to proceed!');
-                    auth.logout();
-                    router.push('/fourwheels/login');
-                } else {
-                    console.error('An unexpected error occurred:', error);
-                    alert('An unexpected error occurred.');
-                }
-            } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
-            }
+            handleApiError(error, auth, router);
         }
     }
 });
@@ -81,21 +68,7 @@ const deleteAutomaker = async (id) => {
                 );
             }
         } catch (error) {
-            if (error.response) {
-                const statusCode = error.response.status;
-
-                if (statusCode === 401) {
-                    alert('Session Expired! Please log in again to proceed!');
-                    auth.logout();
-                    router.push('/fourwheels/login');
-                } else {
-                    console.error('An unexpected error occurred:', error);
-                    alert('An unexpected error occurred.');
-                }
-            } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
-            }
+            handleApiError(error, auth, router);
         }
     }
 };

@@ -9,37 +9,36 @@ const router = useRouter();
 const newPassword = ref('');
 const confirmNewPassword = ref('');
 
+const userErrorMessage = ref('');
+
 onMounted(() => {
     document.title = 'Reset password - Four Wheels';
 });
 
 const handlePasswordChange = async () => {
     if (newPassword.value !== confirmNewPassword.value) {
-        alert('Passwords do not match!');
-        return;
-    }
+        userErrorMessage.value = 'Passwords do not match';
+    } else {
+        try {
+            const res = await axios.put(`http://localhost:3000/fourwheels/auth/${route.params.username}`, {
+                newPassword: newPassword.value
+            });
 
-    try {
-        const res = await axios.put(`http://localhost:3000/fourwheels/auth/${route.params.username}`, {
-            newPassword: newPassword.value
-        });
+            console.log('Password changed:', res.data);
+            alert('Password successfully changed!');
+            router.push('/fourwheels/login');
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-        console.log('Password changed:', res.data);
-        alert('Password successfully changed!');
-        router.push('/fourwheels/login');
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
-
-            if (statusCode === 404) {
-                alert('Username not found!');
+                if (statusCode === 400) {
+                    userErrorMessage.value = error.response.data.errors[0].msg;
+                } else {
+                    alert(error.response.data);
+                }
             } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
+                alert('An unexpected network error occurred.');
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
         }
     }
 }
@@ -79,6 +78,9 @@ const handlePasswordChange = async () => {
                         placeholder="Confirm New Password"
                         v-model="confirmNewPassword"
                     />
+                    <div v-if="userErrorMessage" class="text-red-500 text-sm">
+                        {{ userErrorMessage }}
+                    </div>
                 </div>
                 <div class="flex items-center justify-between">
                     <button

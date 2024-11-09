@@ -7,29 +7,33 @@ const router = useRouter();
 
 const username = ref('');
 
+const userErrorMessage = ref('');
+
 onMounted(() => {
     document.title = 'Forgot password - Four Wheels';
 });
 
 const redirectToPasswordReset = async () => {
-    try {
-        const res = await axios.get(`http://localhost:3000/fourwheels/auth/${username.value}`);
-        console.log('Username exists:', res.data);
-        router.push(`/fourwheels/forgot-password/${username.value}`);
-    } catch (error) {
-        if (error.response) {
-            const statusCode = error.response.status;
+    if (username.value) {
+        try {
+            const res = await axios.get(`http://localhost:3000/fourwheels/auth/${username.value}`);
+            console.log('Username exists:', res.data);
+            router.push(`/fourwheels/forgot-password/${username.value}`);
+        } catch (error) {
+            if (error.response) {
+                const statusCode = error.response.status;
 
-            if (statusCode === 404) {
-                alert('Username not found!');
+                if (statusCode === 404) {
+                    userErrorMessage.value = 'User not found.';
+                } else {
+                    alert(error.response.data);
+                }
             } else {
-                console.error('An unexpected error occurred:', error);
-                alert('An unexpected error occurred.');
+                alert('An unexpected network error occurred.');
             }
-        } else {
-            console.error('An unexpected error occurred:', error);
-            alert('An unexpected error occurred.');
         }
+    } else {
+        userErrorMessage.value = 'Username is required.';
     }
 };
 </script>
@@ -50,6 +54,9 @@ const redirectToPasswordReset = async () => {
                         placeholder="Username"
                         v-model="username"
                     />
+                    <div v-if="userErrorMessage" class="text-red-500 text-sm">
+                        {{ userErrorMessage }}
+                    </div>
                 </div>
                 <div class="flex items-center justify-between">
                     <button
