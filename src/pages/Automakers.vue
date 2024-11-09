@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { handleApiError } from "@/utils/errorHandler";
@@ -11,6 +11,9 @@ const router = useRouter();
 
 const automakers = ref([]);
 const userRole = ref('');
+
+const currentPage = ref(1);
+const itemsPerPage = 10;
 
 onMounted(async () => {
     document.title = 'Automakers - Four Wheels';
@@ -42,6 +45,34 @@ onMounted(async () => {
         }
     }
 });
+
+const totalPages = computed(() => Math.ceil(automakers.value.length / itemsPerPage));
+
+const paginatedAutomakers = computed(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return automakers.value.slice(start, end);
+});
+
+const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+    }
+};
+
+const prevPage = () => {
+    if (currentPage.value > 1) {
+        currentPage.value--;
+    }
+};
+
+const toFirst = () => {
+    currentPage.value = 1;
+};
+
+const toLast = () => {
+    currentPage.value = totalPages.value;
+};
 
 const createAutomaker = () => {
     router.push('/fourwheels/automakers/create');
@@ -120,6 +151,37 @@ const viewAutomakerInfo = (id) => {
                     </tr>
                 </tbody>
             </table>
+            <div v-if="totalPages > 1" class="text-center mb-4">
+                <button 
+                    @click="toFirst" 
+                    :disabled="currentPage === 1" 
+                    class="mr-1 px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+                >
+                    <<
+                </button>
+                <button 
+                    @click="prevPage" 
+                    :disabled="currentPage === 1" 
+                    class="mr-4 px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+                >
+                    <
+                </button>
+                <span class="mr-4">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button 
+                    @click="nextPage" 
+                    :disabled="currentPage === totalPages"
+                    class=" mr-1 px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+                >
+                    >
+                </button>
+                <button 
+                    @click="toLast" 
+                    :disabled="currentPage === totalPages"
+                    class="px-2 py-1 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition ease-in-out duration-200"
+                >
+                    >>
+                </button>
+            </div>
         </div>
     </div>
 </template>

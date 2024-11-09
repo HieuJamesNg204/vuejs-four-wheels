@@ -82,7 +82,7 @@ const deleteCar = async (id) => {
                 :alt="`${car.automaker.name} ${car.model} ${car.year}`" 
             />
             <h1 v-if="car.automaker" class="text-2xl font-bold text-black mb-4 text-center">
-                {{ car.automaker.name }} {{ car.model }} {{ car.year }} - {{ car.price }} VND
+                {{ car.automaker.name }} {{ car.model }} {{ car.year }} - £{{ car.price }}
             </h1>
             <div class="space-y-4">
                 <div>

@@ -102,11 +102,11 @@ const prevPage = () => {
 
 const toFirst = () => {
     currentPage.value = 1;
-}
+};
 
 const toLast = () => {
     currentPage.value = totalPages.value;
-}
+};
 
 const createCar = () => {
     router.push('/fourwheels/cars/create');
@@ -178,7 +178,7 @@ const viewCarInfo = (id) => {
                 Create Car
             </button>
         </div>
-        <div class="text-center mb-4">
+        <div v-if="totalPages > 1" class="text-center mb-4">
             <button 
                 @click="toFirst" 
                 :disabled="currentPage === 1" 
@@ -209,6 +209,9 @@ const viewCarInfo = (id) => {
                 >>
             </button>
         </div>
+        <div v-if="cars.length === 0" class="text-center">
+            Our collection is empty for now, but our upcoming cars will be added shortly. So come back soon!
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Cards -->
             <div v-for="car in paginatedCars" :key="car._id" class="max-w-sm rounded overflow-hidden shadow-lg bg-gray-200">
@@ -220,7 +223,7 @@ const viewCarInfo = (id) => {
                 <div class="p-4">
                     <h2 class="font-bold text-xl mb-2">{{ car.automaker.name }} {{ car.model }}</h2>
                     <p class="text-gray-700 text-base">Year: {{ car.year }}</p>
-                    <p class="text-gray-900 font-semibold mt-2"><strong>Price:</strong> {{ car.price }} VND</p>
+                    <p class="text-gray-900 font-semibold mt-2"><strong>Price:</strong> £{{ car.price }}</p>
                 </div>
 
                 <div class="ml-3 mb-3">
