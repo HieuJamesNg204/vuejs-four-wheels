@@ -49,7 +49,7 @@ onMounted(async () => {
 const totalPages = computed(() => Math.ceil(automakers.value.length / itemsPerPage));
 
 const paginatedAutomakers = computed(() => {
-    const start = (currentPage - 1) * itemsPerPage;
+    const start = (currentPage.value - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     return automakers.value.slice(start, end);
 });
@@ -118,7 +118,7 @@ const viewAutomakerInfo = (id) => {
         </div>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-300">
+            <table class="min-w-full bg-white border border-gray-300 mb-2">
                 <thead>
                     <tr>
                         <th class="py-2 px-4 text-left border-b">ID</th>
@@ -127,7 +127,7 @@ const viewAutomakerInfo = (id) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="automaker in automakers" :key="automaker._id">
+                    <tr v-for="automaker in paginatedAutomakers" :key="automaker._id">
                         <td class="py-2 px-4 border-b">{{ automaker._id }}</td>
                         <td class="py-2 px-4 border-b">{{ automaker.name }}</td>
                         <td class="py-2 px-4 border-b">
