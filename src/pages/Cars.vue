@@ -178,6 +178,9 @@ const viewCarInfo = (id) => {
                 Create Car
             </button>
         </div>
+        <div v-if="cars.length !== 0" class="text-center mb-4">
+            Resulting {{ cars.length }} {{ cars.length === 1 ? 'car' : 'cars' }} in total
+        </div>
         <div v-if="totalPages > 1" class="text-center mb-4">
             <button 
                 @click="toFirst" 
