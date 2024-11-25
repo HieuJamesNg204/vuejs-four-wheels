@@ -54,18 +54,22 @@ onMounted(async () => {
 
 <template>
     <div class="flex items-center justify-center min-h-screen bg-white p-4">
-        <div class="w-full max-w-2xl bg-gray-200 rounded-lg shadow-lg p-6">
+        <div class="w-full max-w-20xl bg-gray-200 rounded-lg shadow-lg p-6">
             <h1 class="text-2xl font-bold text-center mb-4">Order Form</h1>
 
             <div class="flex">
                 <!-- Personal Details -->
-                <div class="mr-50">
-                    <h2 class="text-xl font-bold mb-2">User Details</h2>
-                    <p><strong>Username:</strong> {{ user.username }}</p>
+                <div class="mr-20">
+                    <img 
+                        class="mr-4 w-50 h-50 rounded-lg object-cover" 
+                        v-if="car.automaker"
+                        :src="`http://localhost:3000/${car.image}`" 
+                        :alt="`${car.automaker.name} ${car.model} ${car.year}`" 
+                    />
                 </div>
 
                 <!-- Car Details -->
-                <div class="mr-50">
+                <div class="mr-20">
                     <h2 class="text-xl font-bold mb-2">Car Details</h2>
                     <p v-if="car.automaker">
                         <strong>Model:</strong> {{ car.automaker.name }} {{ car.model }} {{ car.year }}
@@ -80,7 +84,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- Shipping Address Form -->
-                <div class="mb-6">
+                <div>
                     <h2 class="text-xl font-bold mb-2">Shipping Address</h2>
                     <form>
                         <div class="mb-4">
@@ -88,7 +92,7 @@ onMounted(async () => {
                                 Address
                             </label>
                             <input 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                class="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                                 id="address"
                                 type="text"
                                 placeholder="Address"
@@ -99,7 +103,7 @@ onMounted(async () => {
                                 City
                             </label>
                             <input 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                class="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                                 id="city"
                                 type="text"
                                 placeholder="City"
@@ -110,18 +114,18 @@ onMounted(async () => {
                                 Postal Code
                             </label>
                             <input 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                class="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                                 id="postalCode"
                                 type="text"
                                 placeholder="Postal Code"
                             >
                         </div>
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="country">
+                            <label class="block text-gray-96 text-sm font-bold mb-2" for="country">
                                 Country
                             </label>
                             <input 
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                class="shadow appearance-none border rounded w-96 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
                                 id="country"
                                 type="text"
                                 placeholder="Country"
