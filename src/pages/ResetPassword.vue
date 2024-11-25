@@ -21,7 +21,7 @@ const handlePasswordChange = async () => {
     } else {
         try {
             const res = await axios.put(`http://localhost:3000/fourwheels/auth/${route.params.username}`, {
-                newPassword: newPassword.value
+                password: newPassword.value
             });
 
             console.log('Password changed:', res.data);
