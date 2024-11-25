@@ -61,7 +61,7 @@ onMounted(async () => {
                 <!-- Personal Details -->
                 <div class="mr-20">
                     <img 
-                        class="mr-4 w-50 h-50 rounded-lg object-cover" 
+                        class="mr-4 w-full h-full rounded-lg object-cover" 
                         v-if="car.automaker"
                         :src="`http://localhost:3000/${car.image}`" 
                         :alt="`${car.automaker.name} ${car.model} ${car.year}`" 
