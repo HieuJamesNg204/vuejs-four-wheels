@@ -51,7 +51,6 @@ onMounted(async () => {
                 }
             });
 
-            console.log('Automakers:', automakerRes.data);
             automakerList.value = automakerRes.data;
         } catch (error) {
             handleApiError(error, auth, router);

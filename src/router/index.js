@@ -11,10 +11,12 @@ import AutomakerDetail from "@/pages/AutomakerDetail.vue";
 import Cars from "@/pages/Cars.vue";
 import CreateCar from "@/pages/CreateCar.vue";
 import EditCar from "@/pages/EditCar.vue";
+import OrderForm from "@/pages/OrderForm.vue";
 import NotFound from "@/pages/NotFound.vue";
 import CarDetail from "@/pages/CarDetail.vue";
 
 const routes = [
+    // Auth routes
     { path: '/fourwheels/login', component: Login },
     { path: '/fourwheels/register', component: Register },
     { path: '/fourwheels/forgot-password', component: ForgotPasswordUsernamePrompt },
@@ -32,6 +34,10 @@ const routes = [
     { path: '/fourwheels/cars/edit/:id', component: EditCar },
     { path: '/fourwheels/cars/:id', component: CarDetail },
 
+    // Order route
+    { path: '/fourwheels/cars/order/:id', component: OrderForm },
+
+    // Other routes
     { path: '/fourwheels/about', component: About },
     { path: '/fourwheels', redirect: '/fourwheels/cars' },
     { path: '/fourwheels/:pathMatch(.*)*', component: NotFound }

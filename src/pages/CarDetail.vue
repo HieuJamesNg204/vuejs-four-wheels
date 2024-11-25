@@ -70,6 +70,10 @@ const deleteCar = async (id) => {
         }
     }
 };
+
+const handleOrderedCar = async (id) => {
+    router.push(`/fourwheels/cars/order/${id}`);
+}
 </script>
 
 <template>
@@ -126,6 +130,7 @@ const deleteCar = async (id) => {
                 >
                     Delete
                 </button>
+                <button v-if="userRole === 'customer'" class="btn-order" @click="handleOrderedCar(car._id)">Order</button>
                 <button class="btn-goback" @click="router.back()">Go Back</button>
             </div>
         </div>
@@ -143,5 +148,9 @@ const deleteCar = async (id) => {
 
 .btn-goback {
     @apply bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 mx-1;
+}
+
+.btn-order {
+    @apply bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 mx-1;
 }
 </style>
