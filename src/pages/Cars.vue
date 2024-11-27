@@ -212,7 +212,8 @@ const viewCarInfo = (id) => {
             </button>
         </div>
         <div v-if="cars.length === 0" class="text-center">
-            Our collection is empty for now, but our upcoming cars will be added shortly. So come back soon!
+            <p v-if="userRole === 'customer'">Our collection is empty for now, but our upcoming cars will be added shortly. So come back soon!</p>
+            <p v-if="userRole === 'admin'">There are no cars in the collection currently. Add more cars to start selling them!</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <!-- Cards -->

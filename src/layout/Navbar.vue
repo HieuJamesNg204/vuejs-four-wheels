@@ -24,6 +24,7 @@ const handleLogout = () => {
                 <router-link to="/fourwheels/about" class="text-white mr-4">About</router-link>
                 <router-link v-if="auth.isAuthenticated()" to="/fourwheels/profile" class="text-white mr-4">Profile</router-link>
                 <router-link v-if="auth.isAuthenticated()" to="/fourwheels/automakers" class="text-white mr-4">Automakers</router-link>
+                <router-link v-if="auth.isAuthenticated()" to="/fourwheels/orders" class="text-white mr-4">Orders</router-link>
                 <button v-if="auth.isAuthenticated()" class="text-white mr-4" @click="handleLogout">Log out</button>
             </div>
         </div>
