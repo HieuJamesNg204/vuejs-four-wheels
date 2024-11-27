@@ -35,7 +35,7 @@ const routes = [
     { path: '/fourwheels/cars/:id', component: CarDetail },
 
     // Order route
-    { path: '/fourwheels/cars/order/:id', component: OrderForm },
+    { path: '/fourwheels/cars/orders/:id', component: OrderForm },
 
     // Other routes
     { path: '/fourwheels/about', component: About },

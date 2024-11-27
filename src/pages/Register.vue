@@ -6,13 +6,22 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const username = ref('');
+const phoneNumber = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
 const role = ref('admin');
 
 const userErrorMessage = ref('');
 
+const token = localStorage.getItem('token');
+
 onMounted(() => {
+    if (token) {
+        alert('Please log out if you wish to create a new account.');
+        router.push('/fourwheels/cars');
+        return;
+    }
+    
     document.title = 'Register - Four Wheels';
 });
 
@@ -23,6 +32,7 @@ const register = async () => {
         try {
             await axios.post('http://localhost:3000/fourwheels/auth/register', {
                 username: username.value,
+                phoneNumber: phoneNumber.value,
                 password: password.value,
                 role: role.value,
             });
@@ -54,7 +64,7 @@ const register = async () => {
         <div class="w-full max-w-md bg-gray-200 rounded-lg shadow-lg p-6">
             <h1 class="text-2xl text-center font-bold mb-4">Register</h1>
             <form>
-                <div class="mb-6">
+                <div class="mb-3">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                         Username
                     </label>
@@ -66,7 +76,19 @@ const register = async () => {
                         v-model="username"
                     />
                 </div>
-                <div class="mb-6">
+                <div class="mb-3">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phoneNumber">
+                        Phone Number
+                    </label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="phoneNumber"
+                        type="text"
+                        placeholder="Phone Number"
+                        v-model="phoneNumber"
+                    />
+                </div>
+                <div class="mb-3">
                     <label
                         class="block text-gray-700 text-sm font-bold mb-2"
                         for="password"
@@ -81,7 +103,7 @@ const register = async () => {
                         v-model="password"
                     />
                 </div>
-                <div class="mb-6">
+                <div class="mb-3">
                     <label
                         class="block text-gray-700 text-sm font-bold mb-2"
                         for="confirmPassword"
@@ -99,7 +121,7 @@ const register = async () => {
                         {{ userErrorMessage }}
                     </div>
                 </div>
-                <div class="mb-6">
+                <div class="mb-3">
                     <label
                         class="block text-gray-700 text-sm font-bold mb-2"
                         for="role"

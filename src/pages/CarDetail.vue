@@ -72,7 +72,7 @@ const deleteCar = async (id) => {
 };
 
 const handleOrderedCar = async (id) => {
-    router.push(`/fourwheels/cars/order/${id}`);
+    router.push(`/fourwheels/cars/orders/${id}`);
 }
 </script>
 

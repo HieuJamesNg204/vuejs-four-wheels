@@ -52,7 +52,7 @@ const handleCreate = async () => {
             }
         );
     
-        console.log('Automaker created:', res.data);
+        console.log('Automaker created with status: ', res.status);
         alert('Automaker created!');
         router.push('/fourwheels/automakers');
     } catch (error) {

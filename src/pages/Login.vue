@@ -12,7 +12,15 @@ const password = ref('');
 
 const userErrorMessage = ref('');
 
+const token = localStorage.getItem('token');
+
 onMounted(() => {
+    if (token) {
+        alert('You are already logged in');
+        router.push('/fourwheels/cars');
+        return;
+    }
+    
     document.title = 'Login - Four Wheels';
 });
 

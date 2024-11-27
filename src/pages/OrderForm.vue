@@ -15,6 +15,18 @@ const token = localStorage.getItem('token');
 const car = ref({});
 const user = ref({});
 
+const address = ref('');
+const city = ref('');
+const postalCode = ref('');
+const country = ref('');
+
+const shippingAdress = ref({
+    address: address.value,
+    city: city.value,
+    postalCode: postalCode.value,
+    country: postalCode.value
+});
+
 onMounted(async () => {
     document.title = 'Order Form - Four Wheels';
     if (!token) {
@@ -50,6 +62,25 @@ onMounted(async () => {
         }
     }
 });
+
+const handleOrder = async () => {
+    try {
+        // const res = await axios.post('http://localhost:3000/fourwheels/orders', {
+        //     car: car.value.id,
+        //     shippingAddress: shippingAdress
+        // }, {
+        //     headers: {
+        //         'x-auth-token': `${token}`
+        //     }
+        // });
+
+        // console.log('Order created with status: ', res.status);
+        // alert('Order created!');
+        // router.push('/fourwheels/cars');
+    } catch (error) {
+        handleApiError(error, auth, router);
+    }
+}
 </script>
 
 <template>
@@ -68,19 +99,26 @@ onMounted(async () => {
                     />
                 </div>
 
-                <!-- Car Details -->
+                <!-- Car and User Details -->
                 <div class="mr-20">
-                    <h2 class="text-xl font-bold mb-2">Car Details</h2>
-                    <p v-if="car.automaker">
-                        <strong>Model:</strong> {{ car.automaker.name }} {{ car.model }} {{ car.year }}
-                    </p>
-                    <p><strong>Price:</strong> £{{ car.price }}</p>
-                    <p><strong>Body Style:</strong> {{ car.bodyStyle }}</p>
-                    <p><strong>Colour:</strong> {{ car.colour }}</p>
-                    <p><strong>Engine Type:</strong> {{ car.engineType }}</p>
-                    <p><strong>Transmission:</strong> {{ car.transmission }}</p>
-                    <p><strong>Mileage:</strong> {{ car.mileage }} km</p>
-                    <p><strong>Seating Capacity:</strong> {{ car.seatingCapacity }} km</p>
+                    <div class="mb-10">
+                        <h2 class="text-xl font-bold mb-2">Car Details</h2>
+                        <p v-if="car.automaker">
+                            <strong>Model:</strong> {{ car.automaker.name }} {{ car.model }} {{ car.year }}
+                        </p>
+                        <p><strong>Price:</strong> £{{ car.price }}</p>
+                        <p><strong>Body Style:</strong> {{ car.bodyStyle }}</p>
+                        <p><strong>Colour:</strong> {{ car.colour }}</p>
+                        <p><strong>Engine Type:</strong> {{ car.engineType }}</p>
+                        <p><strong>Transmission:</strong> {{ car.transmission }}</p>
+                        <p><strong>Mileage:</strong> {{ car.mileage }} km</p>
+                        <p><strong>Seating Capacity:</strong> {{ car.seatingCapacity }} km</p>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold mb-2">User Details</h2>
+                        <p><strong>Username:</strong> {{ user.username }}</p>
+                        <p><strong>Phone Number:</strong> {{ user.phoneNumber }}</p>
+                    </div>
                 </div>
 
                 <!-- Shipping Address Form -->
@@ -96,6 +134,7 @@ onMounted(async () => {
                                 id="address"
                                 type="text"
                                 placeholder="Address"
+                                v-model="address"
                             >
                         </div>
                         <div class="mb-4">
@@ -107,6 +146,7 @@ onMounted(async () => {
                                 id="city"
                                 type="text"
                                 placeholder="City"
+                                v-model="city"
                             >
                         </div>
                         <div class="mb-4">
@@ -118,6 +158,7 @@ onMounted(async () => {
                                 id="postalCode"
                                 type="text"
                                 placeholder="Postal Code"
+                                v-model="postalCode"
                             >
                         </div>
                         <div class="mb-4">
@@ -129,12 +170,14 @@ onMounted(async () => {
                                 id="country"
                                 type="text"
                                 placeholder="Country"
+                                v-model="country"
                             >
                         </div>
                         <div class="flex items-center justify-between">
                             <button 
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="submit"
+                                @click.prevent="handleOrder"
                             >
                                 Proceed
                             </button>
