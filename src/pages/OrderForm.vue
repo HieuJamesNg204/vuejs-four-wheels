@@ -20,13 +20,6 @@ const city = ref('');
 const postalCode = ref('');
 const country = ref('');
 
-const shippingAdress = ref({
-    address: address.value,
-    city: city.value,
-    postalCode: postalCode.value,
-    country: postalCode.value
-});
-
 onMounted(async () => {
     document.title = 'Order Form - Four Wheels';
     if (!token) {
@@ -65,18 +58,27 @@ onMounted(async () => {
 
 const handleOrder = async () => {
     try {
-        // const res = await axios.post('http://localhost:3000/fourwheels/orders', {
-        //     car: car.value.id,
-        //     shippingAddress: shippingAdress
-        // }, {
-        //     headers: {
-        //         'x-auth-token': `${token}`
-        //     }
-        // });
+        const res = await axios.post(
+            'http://localhost:3000/fourwheels/orders', 
+            {
+                car: car.value._id,
+                shippingAddress: {
+                    address: address.value,
+                    city: city.value,
+                    postalCode: postalCode.value,
+                    country: country.value
+                }
+            }, 
+            {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
+            }
+        );
 
-        // console.log('Order created with status: ', res.status);
-        // alert('Order created!');
-        // router.push('/fourwheels/cars');
+        console.log('Order created with status: ', res.status);
+        alert('Order created!');
+        router.push('/fourwheels/cars');
     } catch (error) {
         handleApiError(error, auth, router);
     }
@@ -135,7 +137,7 @@ const handleOrder = async () => {
                                 type="text"
                                 placeholder="Address"
                                 v-model="address"
-                            >
+                            />
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="city">
@@ -147,7 +149,7 @@ const handleOrder = async () => {
                                 type="text"
                                 placeholder="City"
                                 v-model="city"
-                            >
+                            />
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="postalCode">
@@ -159,7 +161,7 @@ const handleOrder = async () => {
                                 type="text"
                                 placeholder="Postal Code"
                                 v-model="postalCode"
-                            >
+                            />
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-96 text-sm font-bold mb-2" for="country">
@@ -171,7 +173,7 @@ const handleOrder = async () => {
                                 type="text"
                                 placeholder="Country"
                                 v-model="country"
-                            >
+                            />
                         </div>
                         <div class="flex items-center justify-between">
                             <button 

@@ -14,13 +14,21 @@ import EditCar from "@/pages/EditCar.vue";
 import OrderForm from "@/pages/OrderForm.vue";
 import NotFound from "@/pages/NotFound.vue";
 import CarDetail from "@/pages/CarDetail.vue";
+import UserDetails from "@/pages/UserDetails.vue";
+import UserPhoneUpdateForm from "@/pages/UserPhoneUpdateForm.vue";
+import UpdatePasswordForm from "@/pages/UpdatePasswordForm.vue";
 
 const routes = [
     // Auth routes
     { path: '/fourwheels/login', component: Login },
     { path: '/fourwheels/register', component: Register },
     { path: '/fourwheels/forgot-password', component: ForgotPasswordUsernamePrompt },
-    { path: '/fourwheels/forgot-password/:username', component: ResetPassword },
+    { path: '/fourwheels/forgot-password/:id', component: ResetPassword },
+
+    // User profile routes
+    { path: '/fourwheels/profile', component: UserDetails },
+    { path: '/fourwheels/profile/update/:id/phoneNumber', component: UserPhoneUpdateForm },
+    { path: '/fourwheels/profile/update/:id/password', component: UpdatePasswordForm },
 
     // Automakers routes
     { path: '/fourwheels/automakers', component: Automakers },

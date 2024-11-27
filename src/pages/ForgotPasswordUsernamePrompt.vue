@@ -16,9 +16,12 @@ onMounted(() => {
 const redirectToPasswordReset = async () => {
     if (username.value) {
         try {
-            const res = await axios.get(`http://localhost:3000/fourwheels/auth/${username.value}`);
-            console.log('Username exists:', res.data);
-            router.push(`/fourwheels/forgot-password/${username.value}`);
+            const res = await axios.get(`http://localhost:3000/fourwheels/auth/get/username`, {
+                params: { username: username.value }
+            });
+
+            const user = res.data;
+            router.push(`/fourwheels/forgot-password/${user._id}`);
         } catch (error) {
             if (error.response) {
                 const statusCode = error.response.status;

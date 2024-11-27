@@ -72,7 +72,6 @@ const fetchCars = async () => {
             }
         });
     
-        console.log('Cars:', carRes.data);
         cars.value = carRes.data;
         currentPage.value = 1;
     } catch (error) {

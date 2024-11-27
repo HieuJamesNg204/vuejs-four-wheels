@@ -1,18 +1,28 @@
 <script setup>
+import { useAuthStore } from '@/stores/auth';
+import { handleApiError } from '@/utils/errorHandler';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 
+const currentPassword = ref('');
 const newPassword = ref('');
 const confirmNewPassword = ref('');
 
 const userErrorMessage = ref('');
 
+const token = localStorage.getItem('token');
+
 onMounted(() => {
     document.title = 'Reset password - Four Wheels';
+    if (!token) {
+        alert('You need to log in to proceed');
+        router.push('/fourwheels/login');
+    }
 });
 
 const handlePasswordChange = async () => {
@@ -20,28 +30,23 @@ const handlePasswordChange = async () => {
         userErrorMessage.value = 'Passwords do not match';
     } else {
         try {
-            const res = await axios.put(`http://localhost:3000/fourwheels/auth/${route.params.id}/passwords/reset`, {
-                password: newPassword.value
+            const res = await axios.put(`http://localhost:3000/fourwheels/auth/${route.params.id}/passwords/update`, {
+                currentPassword: currentPassword.value,
+                newPassword: newPassword.value
+            }, {
+                headers: {
+                    'x-auth-token': `${token}`
+                }
             });
 
             console.log('Password changed successfully with status code: ', res.status);
             alert('Password successfully changed!');
-            router.push('/fourwheels/login');
+            router.push('/fourwheels/profile');
         } catch (error) {
-            if (error.response) {
-                const statusCode = error.response.status;
-
-                if (statusCode === 400) {
-                    userErrorMessage.value = error.response.data.errors[0].msg;
-                } else {
-                    alert(error.response.data);
-                }
-            } else {
-                alert('An unexpected network error occurred.');
-            }
+            handleApiError(error, auth, router);
         }
     }
-}
+};
 </script>
 
 <template>
@@ -52,13 +57,28 @@ const handlePasswordChange = async () => {
                 <div class="mb-6">
                     <label
                         class="block text-gray-700 text-sm font-bold mb-2"
-                        for="password"
+                        for="currentPassword"
+                    >
+                        Current Password
+                    </label>
+                    <input
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="currentPassword"
+                        type="password"
+                        placeholder="Current Password"
+                        v-model="currentPassword"
+                    />
+                </div>
+                <div class="mb-6">
+                    <label
+                        class="block text-gray-700 text-sm font-bold mb-2"
+                        for="newPassword"
                     >
                         New Password
                     </label>
                     <input
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
+                        id="newPassword"
                         type="password"
                         placeholder="New Password"
                         v-model="newPassword"
@@ -82,20 +102,21 @@ const handlePasswordChange = async () => {
                         {{ userErrorMessage }}
                     </div>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="items-center justify-between">
                     <button
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="button"
                         @click.prevent="handlePasswordChange"
                     >
-                        Reset Password
+                        Update Password
                     </button>
-                    <router-link
-                        to="/fourwheels/login"
-                        class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+                    <button
+                        class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        @click="router.back"
                     >
-                        Finally remember password?
-                    </router-link>
+                        Cancel
+                    </button>
                 </div>
             </form>
         </div>
