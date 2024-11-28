@@ -130,7 +130,9 @@ const handleOrderedCar = async (id) => {
                 >
                     Delete
                 </button>
-                <button v-if="userRole === 'customer'" class="btn-order" @click="handleOrderedCar(car._id)">Order</button>
+                <button v-if="userRole === 'customer' && car.status === 'available'" class="btn-order" @click="handleOrderedCar(car._id)">
+                    Order
+                </button>
                 <button class="btn-goback" @click="router.back()">Go Back</button>
             </div>
         </div>

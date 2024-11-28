@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/auth';
 import { handleApiError } from '@/utils/errorHandler';
 import axios from 'axios';
+import { format } from 'date-fns';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -43,7 +44,7 @@ onMounted(async () => {
 
 const fetchOrders = async () => {
     const url = 'http://localhost:3000/fourwheels/orders' 
-        + (userRole === 'customer' ? `/users` : '')
+        + (userRole.value === 'customer' ? `/users` : '')
         + (selectedStatus.value ? `?status=${selectedStatus.value}` : '');
     
     try {
@@ -88,14 +89,18 @@ const toLast = () => {
     currentPage.value = totalPages.value;
 };
 
-const viewOrderDetails = () => {
-    alert('This is a dummy action! You\'ve not been able to view the order yet.');
+const formatDate = (dateString) => {
+    return format(new Date(dateString), 'dd/MM/yyyy, HH:mm:ss');
+}
+
+const viewOrderDetails = (id) => {
+    router.push(`/fourwheels/orders/${id}`);
 };
 </script>
 
 <template>
     <div class="container mx-auto py-10">
-        <h1 class="text-3xl font-bold mb-6 text-center">All Orders</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center">All Current Orders</h1>
         <div class="flex mb-2">
             <h3 class="text-lg font-bold">Filter Orders by Status</h3>
         </div>
@@ -110,8 +115,7 @@ const viewOrderDetails = () => {
                 <option value="">All Status</option>
                 <option value="pending">Pending</option>
                 <option value="processing">Processing</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
+                <option value="shipping">Shipping</option>
             </select>
         </div>
 
@@ -147,33 +151,47 @@ const viewOrderDetails = () => {
             </button>
         </div>
         <div v-if="orders.length === 0" class="text-center">
-            <p v-if="userRole === 'admin'">There are no orders at the moment.</p>
-            <p v-if="userRole === 'user'">You haven't placed any orders yet. Continue browsing our collection for the best car that meets your needs.</p>
+            <p v-if="userRole === 'admin' || selectedStatus !== ''">There are no orders at the moment.</p>
+            <p v-if="userRole === 'customer' && selectedStatus === ''">
+                You haven't placed any orders yet. Continue browsing our collection for the best car that meets your needs.
+            </p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-6">
             <!-- Cards -->
-            <div v-for="order in paginatedOrders" :key="order._id" class="max-w-sm rounded overflow-hidden shadow-lg bg-gray-200">
-                <div class="p-4">
-                    <h2 class="font-bold text-xl mb-2">Order ID: {{ order._id }}</h2>
-                    <p class="text-gray-700 text-base">Customer: {{ order.user.username }}</p>
-                    <p class="text-gray-700 text-base">
-                        Ordered car: {{ typeof order.car }} {{ order.car.model }} {{ order.car.year }}
-                    </p>
-                    <p class="text-gray-700 text-base">Date: {{ order.orderDate }}</p>
-                    <p class="text-gray-900 font-semibold mt-2"><strong>Status:</strong> {{ order.status }}</p>
-                    <p class="text-gray-900 font-semibold mt-2"><strong>Shipping Fee:</strong> {{ order.shippingFee }}</p>
-                    <p class="text-gray-900 font-semibold mt-2"><strong>Total:</strong> £{{ order.totalPrice }}</p>
-                </div>
-
-                <div class="ml-3 mb-3">
-                    <button
-                        class="btn-details"
-                        @click="viewOrderDetails(order._id)"
-                    >
-                        Details
-                    </button>
+            <div v-for="order in paginatedOrders" :key="order._id" class="max-w-full rounded overflow-hidden shadow-lg bg-gray-200">
+                <div class="flex p-4">
+                    <div class="mr-4">
+                        <img 
+                            class="w-full h-full rounded object-cover" 
+                            :src="`http://localhost:3000/${order.car.image}`" 
+                            :alt="`${order.car.automaker.name} ${order.car.model} ${order.car.year}`" 
+                        />
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-xl mb-2">Order ID: {{ order._id }}</h2>
+                        <p v-if="userRole === 'admin'" class="text-gray-700 text-base">Customer: {{ order.user.username }}</p>
+                        <p class="text-gray-700 text-base">
+                            Ordered Car: {{ order.car.automaker.name }} {{ order.car.model }} {{ order.car.year }}
+                        </p>
+                        <p class="text-gray-700 text-base">Order Date: {{ formatDate(order.orderDate) }}</p>
+                        <p class="text-gray-900 font-semibold mt-2"><strong>Status:</strong> {{ order.status }}</p>
+                        <p class="text-gray-900 font-semibold mt-2"><strong>Shipping Fee:</strong> £{{ order.shippingFee }}</p>
+                        <p class="text-gray-900 font-semibold mt-2"><strong>Total:</strong> £{{ order.totalPrice }}</p>
+                        <button
+                            class="btn-details"
+                            @click="viewOrderDetails(order._id)"
+                        >
+                            Details
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.btn-details {
+    @apply bg-green-500 text-white mt-2 px-2 py-1 rounded hover:bg-green-600 mx-1;
+}
+</style>
