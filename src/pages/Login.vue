@@ -12,10 +12,8 @@ const password = ref('');
 
 const userErrorMessage = ref('');
 
-const token = localStorage.getItem('token');
-
 onMounted(() => {
-    if (token) {
+    if (auth.isAuthenticated()) {
         alert('You are already logged in');
         router.push('/fourwheels/cars');
         return;

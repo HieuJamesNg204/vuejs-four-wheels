@@ -58,6 +58,7 @@ const setStatus = async () => {
         );
 
         if (!isConfirmed) {
+            status.value = order.value.status;
             return;
         }
     }
@@ -115,7 +116,7 @@ const viewCarDetails = (id) => {
                 Order ID: {{ order._id }}
             </h1>
 
-            <div class="space-y-4">
+            <div class="space-y-4 mb-2">
                 <div>
                     <div class="flex flex-col items-center justify-center">
                         <img 
@@ -148,9 +149,9 @@ const viewCarDetails = (id) => {
                     <p v-if="order.shippingAddress" class="text-gray-800"> - Country: {{ order.shippingAddress.country }}</p>
                 </div>
                 <div>
-                    <label class="text-black font-semibold">Status:</label>
+                    <label class="text-black font-semibold mr-2">Status:</label>
                     <select 
-                        v-if="userRole === 'admin'" 
+                        v-if="userRole === 'admin' && order.status !== 'delivered'" 
                         v-model="status"
                         @change="setStatus"
                         name="statusSelect" 
@@ -162,14 +163,11 @@ const viewCarDetails = (id) => {
                         <option value="shipping">Shipping</option>
                         <option value="delivered">Delivered (Completed)</option>
                     </select>
-                    <p v-if="userRole === 'customer'" class="text-gray-800">{{ order.status }}</p>
+                    <p v-if="userRole === 'customer' || order.status === 'delivered'" class="text-gray-800">{{ order.status }}</p>
                 </div>
                 <div>
                     <label class="text-black font-semibold">Shipping Fee:</label>
                     <p class="text-gray-800">{{ order.shippingFee }}</p>
-                    <button v-if="userRole === 'admin'" class="btn-edit" @click="updateFee">
-                        Edit
-                    </button>
                 </div>
                 <div>
                     <label class="text-black font-semibold">Total Price:</label>
@@ -177,7 +175,10 @@ const viewCarDetails = (id) => {
                 </div>
             </div>
             
-            <div class="ml-3 mb-3">
+            <div>
+                <button v-if="userRole === 'admin'" class="btn-edit" @click="updateFee">
+                    Update Fee
+                </button>
                 <button
                     v-if="userRole === 'admin'"
                     class="btn-delete"
