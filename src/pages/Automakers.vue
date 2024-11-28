@@ -15,10 +15,11 @@ const userRole = ref('');
 const currentPage = ref(1);
 const itemsPerPage = 10;
 
+const token = auth.token;
+
 onMounted(async () => {
     document.title = 'Automakers - Four Wheels';
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed!');
         router.push('/fourwheels/login');
         return;
@@ -88,7 +89,7 @@ const deleteAutomaker = async (id) => {
         try {
             const res = await axios.delete(`http://localhost:3000/fourwheels/automakers/${id}`, {
                 headers: {
-                    'x-auth-token': `${localStorage.getItem('token')}`
+                    'x-auth-token': `${token}`
                 }
             });
 

@@ -24,10 +24,10 @@ const imagePath = ref('');
 const route = useRoute();
 const router = useRouter();
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 onMounted(async () => {
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {

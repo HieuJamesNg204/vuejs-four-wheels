@@ -14,8 +14,8 @@ const route = useRoute();
 
 onMounted(async () => {
     document.title = 'Automaker Details - Four Wheels';
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const token = auth.token;
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {

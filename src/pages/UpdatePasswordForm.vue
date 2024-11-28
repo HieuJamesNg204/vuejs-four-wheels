@@ -15,11 +15,11 @@ const confirmNewPassword = ref('');
 
 const userErrorMessage = ref('');
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 onMounted(() => {
     document.title = 'Reset password - Four Wheels';
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     }

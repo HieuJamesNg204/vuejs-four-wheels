@@ -10,7 +10,7 @@ const auth = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 const car = ref({});
 const user = ref({});
@@ -22,7 +22,7 @@ const country = ref('');
 
 onMounted(async () => {
     document.title = 'Order Form - Four Wheels';
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {
@@ -82,7 +82,7 @@ const handleOrder = async () => {
     } catch (error) {
         handleApiError(error, auth, router);
     }
-}
+};
 </script>
 
 <template>
@@ -94,7 +94,7 @@ const handleOrder = async () => {
                 <!-- Personal Details -->
                 <div class="mr-20">
                     <img 
-                        class="mr-4 w-full h-full rounded-lg object-cover" 
+                        class="mr-4 max-w-xl rounded-lg object-cover" 
                         v-if="car.automaker"
                         :src="`http://localhost:3000/${car.image}`" 
                         :alt="`${car.automaker.name} ${car.model} ${car.year}`" 
@@ -182,6 +182,13 @@ const handleOrder = async () => {
                                 @click.prevent="handleOrder"
                             >
                                 Proceed
+                            </button>
+                            <button 
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="submit"
+                                @click.prevent="router.back()"
+                            >
+                                Go Back
                             </button>
                         </div>
                     </form>

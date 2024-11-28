@@ -19,6 +19,8 @@ import UserPhoneUpdateForm from "@/pages/UserPhoneUpdateForm.vue";
 import UpdatePasswordForm from "@/pages/UpdatePasswordForm.vue";
 import CurrentOrders from "@/pages/CurrentOrders.vue";
 import OrderDetails from "@/pages/OrderDetails.vue";
+import OrderFeeUpdateForm from "@/pages/OrderFeeUpdateForm.vue";
+import CompletedOrders from "@/pages/CompletedOrders.vue";
 
 const routes = [
     // Auth routes
@@ -45,9 +47,11 @@ const routes = [
     { path: '/fourwheels/cars/:id', component: CarDetail },
 
     // Order route
-    { path: '/fourwheels/cars/orders/:id', component: OrderForm },
+    { path: '/fourwheels/cars/:id/orders', component: OrderForm },
     { path: '/fourwheels/orders', component: CurrentOrders },
     { path: '/fourwheels/orders/:id', component: OrderDetails },
+    { path: '/fourwheels/orders/feeUpdate/:id', component: OrderFeeUpdateForm },
+    { path: '/fourwheels/orders/history', component: CompletedOrders },
 
     // Other routes
     { path: '/fourwheels/about', component: About },

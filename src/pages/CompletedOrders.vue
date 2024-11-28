@@ -11,7 +11,6 @@ const router = useRouter();
 
 const user = ref({});
 const orders = ref([]);
-const selectedStatus = ref('');
 const userRole = ref('');
 
 const itemsPerPage = 8;
@@ -45,7 +44,7 @@ onMounted(async () => {
 const fetchOrders = async () => {
     const url = 'http://localhost:3000/fourwheels/orders' 
         + (userRole.value === 'customer' ? `/users` : '')
-        + (selectedStatus.value ? `?status=${selectedStatus.value}` : '');
+        + '?status=delivered';
     
     try {
         const orderRes = await axios.get(url, {
@@ -93,44 +92,26 @@ const formatDate = (dateString) => {
     return format(new Date(dateString), 'dd/MM/yyyy, HH:mm:ss');
 };
 
-const viewOrderDetails = (id) => {
-    router.push(`/fourwheels/orders/${id}`);
+const viewCurrentOrders = () => {
+    router.push('/fourwheels/orders');
 };
 
-const viewOrderHistory = () => {
-    router.push('/fourwheels/orders/history');
+const viewOrderDetails = (id) => {
+    router.push(`/fourwheels/orders/${id}`);
 };
 </script>
 
 <template>
     <div class="container mx-auto py-10">
-        <h1 class="text-3xl font-bold mb-6 text-center">All Current Orders</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center">Order History</h1>
 
         <div class="text-center mb-8">
             <button 
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                @click="viewOrderHistory"
+                @click="viewCurrentOrders"
             >
-                View order history
+                Go to current orders
             </button>
-        </div>
-        
-        <div class="flex mb-2">
-            <h3 class="text-lg font-bold">Filter Orders by Status</h3>
-        </div>
-        <div class="flex mb-8">
-            <select 
-                v-model="selectedStatus"
-                @change="fetchOrders"
-                name="statusSelect" 
-                id="statusSelect"
-                class="border px-2 py-1 rounded"
-            >
-                <option value="">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="processing">Processing</option>
-                <option value="shipping">Shipping</option>
-            </select>
         </div>
 
         <div v-if="totalPages > 1" class="text-center mb-4">
@@ -165,9 +146,9 @@ const viewOrderHistory = () => {
             </button>
         </div>
         <div v-if="orders.length === 0" class="text-center">
-            <p v-if="userRole === 'admin' || selectedStatus !== ''">There are no orders at the moment.</p>
-            <p v-if="userRole === 'customer' && selectedStatus === ''">
-                You haven't placed any orders yet. Continue browsing our collection to find the best car that meets your needs.
+            <p v-if="userRole === 'admin'">There are no orders at the moment.</p>
+            <p v-if="userRole === 'customer'">
+                You haven't placed an order before. Continue browsing our collection and order the car as you wish.
             </p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-6">

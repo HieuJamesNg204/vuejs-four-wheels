@@ -10,11 +10,11 @@ const router = useRouter();
 
 const user = ref({});
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 onMounted(async () => {
     document.title = 'User Details - Four Wheels';
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {
@@ -38,7 +38,7 @@ const updatePhone = () => {
 
 const updatePassword = () => {
     router.push(`/fourwheels/profile/update/${user.value._id}/password`);
-}
+};
 </script>
 
 <template>

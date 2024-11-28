@@ -17,14 +17,14 @@ const handleLogout = () => {
             <div class="text-white font-bold text-xl">
                 <router-link :to="auth.isAuthenticated() ? '/fourwheels/cars' : '/fourwheels/login'">Four Wheels</router-link>
             </div>
-            <div class="text-white">
+            <!-- <div class="text-white">
                 <p v-if="auth.username !== ''">Welcome  {{ auth.username }}</p>
-            </div>
+            </div> -->
             <div>
                 <router-link to="/fourwheels/about" class="text-white mr-4">About</router-link>
-                <router-link v-if="auth.isAuthenticated()" to="/fourwheels/profile" class="text-white mr-4">Profile</router-link>
                 <router-link v-if="auth.isAuthenticated()" to="/fourwheels/automakers" class="text-white mr-4">Automakers</router-link>
                 <router-link v-if="auth.isAuthenticated()" to="/fourwheels/orders" class="text-white mr-4">Orders</router-link>
+                <router-link v-if="auth.isAuthenticated()" to="/fourwheels/profile" class="text-white mr-4">{{ auth.username }}</router-link>
                 <button v-if="auth.isAuthenticated()" class="text-white mr-4" @click="handleLogout">Log out</button>
             </div>
         </div>

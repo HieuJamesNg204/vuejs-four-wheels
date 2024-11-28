@@ -41,7 +41,7 @@ const handlePasswordChange = async () => {
             }
         }
     }
-}
+};
 </script>
 
 <template>

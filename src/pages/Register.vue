@@ -1,8 +1,10 @@
 <script setup>
+import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+const auth = useAuthStore();
 const router = useRouter();
 
 const username = ref('');
@@ -13,10 +15,8 @@ const role = ref('admin');
 
 const userErrorMessage = ref('');
 
-const token = localStorage.getItem('token');
-
 onMounted(() => {
-    if (token) {
+    if (auth.isAuthenticated()) {
         alert('Please log out if you wish to create a new account.');
         router.push('/fourwheels/cars');
         return;

@@ -15,11 +15,11 @@ const status = ref('');
 const router = useRouter();
 const route = useRoute();
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 onMounted(async () => {
-    document.title = 'Order details - Four Wheels';
-    if (!token) {
+    document.title = 'Order Details - Four Wheels';
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {
@@ -48,7 +48,7 @@ onMounted(async () => {
 
 const formatDate = (dateString) => {
     return format(new Date(dateString), 'dd/MM/yyyy, HH:mm:ss');
-}
+};
 
 const setStatus = async () => {
     if (status.value === 'delivered') {
@@ -75,13 +75,18 @@ const setStatus = async () => {
                 }
             }
         );
+
+        if (status.value === 'delivered') {
+            alert('The order has been successfully completed');
+            router.push('/fourwheels/orders');
+        }
     } catch (error) {
         handleApiError(error, auth, router);
     }
 };
 
 const updateFee = () => {
-    alert('This is a dummy action! You\'ve not been able to update the fee yet');
+    router.push(`/fourwheels/orders/feeUpdate/${route.params.id}`);
 };
 
 const deleteOrder = async () => {
@@ -106,7 +111,7 @@ const deleteOrder = async () => {
 
 const viewCarDetails = (id) => {
     router.push(`/fourwheels/cars/${id}`);
-}
+};
 </script>
 
 <template>
@@ -176,11 +181,11 @@ const viewCarDetails = (id) => {
             </div>
             
             <div>
-                <button v-if="userRole === 'admin'" class="btn-edit" @click="updateFee">
+                <button v-if="userRole === 'admin' && order.status !== 'delivered'" class="btn-edit" @click="updateFee">
                     Update Fee
                 </button>
                 <button
-                    v-if="userRole === 'admin'"
+                    v-if="userRole === 'admin' && order.status !== 'delivered'"
                     class="btn-delete"
                     @click="deleteOrder"
                 >

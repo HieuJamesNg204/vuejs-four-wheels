@@ -11,11 +11,11 @@ const router = useRouter();
 
 const text = ref('');
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 onMounted(async () => {
     document.title = 'Add automaker - Four Wheels';
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {

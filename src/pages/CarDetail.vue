@@ -13,11 +13,11 @@ const userRole = ref('');
 const router = useRouter();
 const route = useRoute();
 
-const token = localStorage.getItem('token');
+const token = auth.token;
 
 onMounted(async () => {
     document.title = 'Car details - Four Wheels';
-    if (!token) {
+    if (!auth.isAuthenticated()) {
         alert('You need to log in to proceed');
         router.push('/fourwheels/login');
     } else {
@@ -72,8 +72,8 @@ const deleteCar = async (id) => {
 };
 
 const handleOrderedCar = async (id) => {
-    router.push(`/fourwheels/cars/orders/${id}`);
-}
+    router.push(`/fourwheels/cars/${id}/orders`);
+};
 </script>
 
 <template>
@@ -88,7 +88,7 @@ const handleOrderedCar = async (id) => {
             <h1 v-if="car.automaker" class="text-2xl font-bold text-black mb-4 text-center">
                 {{ car.automaker.name }} {{ car.model }} {{ car.year }} - £{{ car.price }}
             </h1>
-            <div class="space-y-4">
+            <div class="space-y-4 mb-2">
                 <div>
                     <label class="text-black font-semibold">Year of Manufacture:</label>
                     <p class="text-gray-800">{{ car.year }}</p>
@@ -119,7 +119,7 @@ const handleOrderedCar = async (id) => {
                 </div>
             </div>
             
-            <div class="ml-3 mb-3">
+            <div>
                 <button v-if="userRole === 'admin'" class="btn-edit" @click="editCar(car._id)">
                     Edit
                 </button>
