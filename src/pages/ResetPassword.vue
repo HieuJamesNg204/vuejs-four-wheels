@@ -28,6 +28,7 @@ const handlePasswordChange = async () => {
             alert('Password successfully changed!');
             router.push('/fourwheels/login');
         } catch (error) {
+            console.log(error);
             if (error.response) {
                 const statusCode = error.response.status;
 
