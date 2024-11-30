@@ -51,7 +51,6 @@ const handleEdit = async () => {
         alert('Phone number updated!');
         router.push('/fourwheels/profile');
     } catch (error) {
-        console.log(error);
         handleApiError(error, auth, router);
     }
 };
