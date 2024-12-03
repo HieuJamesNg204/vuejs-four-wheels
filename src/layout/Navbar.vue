@@ -17,9 +17,6 @@ const handleLogout = () => {
             <div class="text-white font-bold text-xl">
                 <router-link :to="auth.isAuthenticated() ? '/fourwheels/cars' : '/fourwheels/login'">Four Wheels</router-link>
             </div>
-            <!-- <div class="text-white">
-                <p v-if="auth.username !== ''">Welcome  {{ auth.username }}</p>
-            </div> -->
             <div>
                 <router-link to="/fourwheels/about" class="text-white mr-4">About</router-link>
                 <router-link v-if="auth.isAuthenticated()" to="/fourwheels/automakers" class="text-white mr-4">Automakers</router-link>
